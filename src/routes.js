@@ -1,5 +1,7 @@
 import Main from "./pages/MainPage";
 import NotFound from "./pages/NotFoundPage";
+import About from "./pages/AboutPage";
+
 
 const routes = [
   {
@@ -28,10 +30,18 @@ const routes = [
     component: () => import("./pages/RecipeViewPage"),
   },
   {
+    path: '/about',
+    name: "about",
+    // component: () => import("./pages/AboutPage"),
+    component: About,
+  },
+  
+  {
     path: "*",
     name: "notFound",
     component: NotFound,
   },
+  
 ];
 
 export default routes;
