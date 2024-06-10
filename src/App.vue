@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    
     <nav class="navbar fixed-top navbar-expand-lg">
       <div class="container-fluid">
         <!-- Left-aligned Search Bar -->
@@ -19,7 +20,6 @@
             <li class="nav-item">
               <!-- <router-link :to="{ name: 'about' }" class="nav-link" exact-active-class="router-link-exact-active">About</router-link> -->
               <router-link :to="{ name: 'about' }" class="nav-link">About</router-link>
-
             </li>
             
             <!-- If the user is logged in -->
@@ -32,9 +32,17 @@
                 <b-dropdown-item :to="{ name: 'my-recipes' }">My Recipes</b-dropdown-item>
                 <b-dropdown-item :to="{ name: 'family-recipes' }">My Family Recipes</b-dropdown-item>
               </b-nav-item-dropdown>
-
-              <router-link :to="{ name: 'new-recipe' }" class="nav-link">Create New Recipe</router-link>
-              <b-nav-item-dropdown right>
+              
+                <!-- Navbar tabs -->
+                <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a @click="openModal" class="nav-link">Create New Recipe</a>
+                  </li>
+                </ul>
+               
+              <!-- <router-link :to="{ name: 'new-recipe' }" class="nav-link">Create New Recipe</router-link> -->
+              
+                <b-nav-item-dropdown right>
                 <template #button-content>
                   Hello {{ $root.store.username }}
                 </template>
@@ -56,17 +64,23 @@
         <!-- Right-aligned Submit Recipe Button -->
       </div>
     </nav>
+    
+   
     <div class="background-image"></div>
     <router-view />
+    <NewRecipeModal v-if="showModal" ref="newRecipeModal"></NewRecipeModal>
   </div>
 </template>
 
 <script>
+import NewRecipeModal from './components/NewRecipeModal.vue';
+
 
 export default {
   name: "App",
   data() {
     return {
+      showModal: false,
       searchQuery: ''
     };
   },
@@ -79,7 +93,18 @@ export default {
       this.$router.push("/").catch(() => {
         this.$forceUpdate();
       });
+    },
+      openModal() {
+      // Call the openModal method of the NewRecipeModal component
+      this.showModal = true;
+     
     }
+  
+  },
+  components: {
+    NewRecipeModal,
+    // MainPage
+
   }
 };
 </script>
@@ -111,23 +136,24 @@ export default {
 .navbar-nav {
   display: flex; /* Use flexbox layout for navbar links */
   align-items: center; /* Center items vertically */
+  margin-left: auto; /* Move navbar links to the right */
 }
 
 .nav-link {
   font-weight: bold;
-  color: #ffffff; 
+  color: #ffffff;
   margin-left: 15px;
 }
 
 .nav-link.router-link-exact-active {
-  color: #ffffff; 
+  color: #ffffff;
 }
 
 .b-button.nav-link {
   background-color: transparent;
   border: none;
   padding: 0;
-  color: #ffffff; 
+  color: #ffffff;
   font-weight: bold;
 }
 
@@ -141,9 +167,8 @@ export default {
   border: none;
   font-weight: bold;
   padding: 10px 20px;
-  border-radius: 5px;
+  border-radius: 5px;
 }
-
 
 
 </style>
