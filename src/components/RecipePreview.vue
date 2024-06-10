@@ -4,31 +4,70 @@
     class="recipe-preview"
   >
     <div class="recipe-body">
-      <img v-if="image_load" :src="recipe.image" class="recipe-image" />
+      <img
+        :src="recipe.image"
+        class="recipe-image"
+        @mouseover="showHoverEffect"
+        @mouseout="hideHoverEffect"
+      />
+      <div v-if="hovered" class="image-hover">Click to view recipe</div>
     </div>
     <div class="recipe-footer">
       <div :title="recipe.title" class="recipe-title">
         {{ recipe.title }}
       </div>
+
+      <ul class="recipe-overview">
+        <li v-if="recipe.vegan">Vegan</li>
+        <li v-else-if="recipe.vegetarian">Vegetarian</li>
+      </ul>
       <ul class="recipe-overview">
         <li>{{ recipe.readyInMinutes }} minutes</li>
         <li>{{ recipe.aggregateLikes }} likes</li>
+        <li v-if="recipe.glutenFree">Gluten-Free</li>
+        <li v-else>Contains Gluten</li>
       </ul>
+      <div class="recipe-actions">
+        <button @click="toggleFavorite">
+          {{ isFavorite ? "Favorited" : "Add to Favorites" }}
+        </button>
+        <span v-if="viewed" class="viewed-indicator">Viewed</span>
+      </div>
     </div>
   </router-link>
 </template>
 
+
 <script>
 export default {
-  mounted() {
-    this.axios.get(this.recipe.image).then((i) => {
-      this.image_load = true;
-    });
-  },
+  // mounted() {
+  //   this.axios.get(this.recipe.image).then((i) => {
+  //     this.image_load = true;
+  //   });
+  // },
   data() {
     return {
-      image_load: false
+      hovered: false,
+      viewed: false,
+      isFavorite: false
     };
+  },
+  methods: {
+    showHoverEffect() {
+      this.hovered = true;
+    },
+    hideHoverEffect() {
+      this.hovered = false;
+    },
+    markAsViewed() {
+      this.viewed = true;
+      localStorage.setItem(`viewed_${this.recipe.id}`, 'true');
+    },
+    toggleFavorite(event) {
+      event.stopPropagation();
+      this.isFavorite = !this.isFavorite;
+      localStorage.setItem(`favorite_${this.recipe.id}`, this.isFavorite.toString());
+    }
   },
   props: {
     recipe: {
@@ -60,6 +99,7 @@ export default {
     //   }
     // }
   }
+  
 };
 </script>
 
@@ -71,71 +111,73 @@ export default {
   position: relative;
   margin: 10px 10px;
 }
-.recipe-preview > .recipe-body {
+.recipe-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.recipe-body {
   width: 100%;
   height: 200px;
   position: relative;
 }
-
-.recipe-preview .recipe-body .recipe-image {
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: auto;
-  margin-bottom: auto;
+.recipe-image {
   display: block;
-  width: 98%;
-  height: auto;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  background-size: cover;
-}
-
-.recipe-preview .recipe-footer {
   width: 100%;
-  height: 50%;
-  overflow: hidden;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.3s ease;
 }
-
-.recipe-preview .recipe-footer .recipe-title {
-  padding: 10px 10px;
-  width: 100%;
-  font-size: 12pt;
-  text-align: left;
+.image-hover {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  opacity: 0.8;
+  pointer-events: none;
+}
+.recipe-footer {
+  padding: 10px;
+  background-color: #f9f9f9;
+}
+.recipe-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
   white-space: nowrap;
   overflow: hidden;
-  -o-text-overflow: ellipsis;
   text-overflow: ellipsis;
 }
-
-.recipe-preview .recipe-footer ul.recipe-overview {
-  padding: 5px 10px;
-  width: 100%;
-  display: -webkit-box;
-  display: -moz-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
+.recipe-overview {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 10px 0;
   display: flex;
-  -webkit-box-flex: 1;
-  -moz-box-flex: 1;
-  -o-box-flex: 1;
-  box-flex: 1;
-  -webkit-flex: 1 auto;
-  -ms-flex: 1 auto;
-  flex: 1 auto;
-  table-layout: fixed;
-  margin-bottom: 0px;
+  justify-content: space-between;
 }
-
-.recipe-preview .recipe-footer ul.recipe-overview li {
-  -webkit-box-flex: 1;
-  -moz-box-flex: 1;
-  -o-box-flex: 1;
-  -ms-box-flex: 1;
-  box-flex: 1;
-  -webkit-flex-grow: 1;
-  flex-grow: 1;
-  width: 90px;
-  display: table-cell;
+.recipe-overview li {
+  flex: 1;
   text-align: center;
+}
+.recipe-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.recipe-actions button {
+  padding: 5px 10px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.recipe-actions .viewed-indicator {
+  font-size: 12px;
+  color: #28a745;
 }
 </style>
