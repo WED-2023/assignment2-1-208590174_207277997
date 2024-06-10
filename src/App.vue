@@ -32,8 +32,46 @@
                 <b-dropdown-item :to="{ name: 'my-recipes' }">My Recipes</b-dropdown-item>
                 <b-dropdown-item :to="{ name: 'family-recipes' }">My Family Recipes</b-dropdown-item>
               </b-nav-item-dropdown>
+              
+              <!-- <router-link :to="{ name: 'new-recipe' }" class="nav-link">Create New Recipe</router-link> -->
+              <div>
+                <button @click="openModal" class="nav-link">Create New Recipe</button>
+                  <div v-if="isModalVisible" class="modal-overlay">
+                    <div class="modal">
+                      <!-- <button class="close-button" @click="closeModal">X</button>
+                      <h2>Create New Recipe</h2>
+                      <form @submit.prevent="submitRecipe">
+                        <div>
+                          <label for="recipe-name">Recipe Name:</label>
+                          <input type="text" id="recipe-name" v-model="recipe.name">
+                        </div>
+                        <button type="submit">Submit</button>
+                      </form> -->
+                    </div>
+                </div>
+            </div>
 
-              <router-link :to="{ name: 'new-recipe' }" class="nav-link">Create New Recipe</router-link>
+            <!-- <ul class="nav navbar-nav ml-auto" role="navigation">
+                <li><a href="#myModal" data-toggle = "modal" data-target= "#myModal" class="nav-link">Create New Recipe</a></li>
+            </ul>
+            <div class="modal fade" id="myModal">
+              <div class="modal-dialog">
+                  <div class="modal-content"> 
+                      <div class="modal-header">
+                          <h5 class="modal-title">For your Queries</h5> 
+                      </div>
+                      <div class="modal-body">
+                          IF you have any questions, Mess Manager Office number is <strong>+01234567890</strong> or you can email us by <strong>Ouremail@domain.com</strong>>
+                      </div>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-primary" data-dismiss = "modal">Close</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+             -->
+            
+
               <b-nav-item-dropdown right>
                 <template #button-content>
                   Hello {{ $root.store.username }}
@@ -67,6 +105,11 @@ export default {
   name: "App",
   data() {
     return {
+      isModalVisible: false,
+      recipe: {
+        name: ''
+        // Add other properties as needed
+      },
       searchQuery: ''
     };
   },
@@ -79,6 +122,17 @@ export default {
       this.$router.push("/").catch(() => {
         this.$forceUpdate();
       });
+    },
+    openModal() {
+      this.isModalVisible = true;
+    },
+    closeModal() {
+      this.isModalVisible = false;
+    },
+    submitRecipe() {
+      // Handle the form submission
+      console.log('Recipe submitted:', this.recipe);
+      this.closeModal();
     }
   }
 };
@@ -111,23 +165,24 @@ export default {
 .navbar-nav {
   display: flex; /* Use flexbox layout for navbar links */
   align-items: center; /* Center items vertically */
+  margin-left: auto; /* Move navbar links to the right */
 }
 
 .nav-link {
   font-weight: bold;
-  color: #ffffff; 
+  color: #ffffff;
   margin-left: 15px;
 }
 
 .nav-link.router-link-exact-active {
-  color: #ffffff; 
+  color: #ffffff;
 }
 
 .b-button.nav-link {
   background-color: transparent;
   border: none;
   padding: 0;
-  color: #ffffff; 
+  color: #ffffff;
   font-weight: bold;
 }
 
@@ -141,9 +196,8 @@ export default {
   border: none;
   font-weight: bold;
   padding: 10px 20px;
-  border-radius: 5px;
+  border-radius: 5px;
 }
-
 
 
 </style>
