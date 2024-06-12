@@ -11,8 +11,11 @@ const router = new VueRouter({
 });
 
 import Vuelidate from "vuelidate";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
+
 import {
   FormGroupPlugin,
   FormPlugin,
@@ -24,7 +27,7 @@ import {
   AlertPlugin,
   ToastPlugin,
   LayoutPlugin,
-} from "bootstrap-vue";
+  } from "bootstrap-vue";
 [
   FormGroupPlugin,
   FormPlugin,

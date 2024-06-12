@@ -1,6 +1,6 @@
 <template>
   <div>
-
+       
         <div style="display: flex;">
           <div style="flex: 1;">
             <br><br>
@@ -37,6 +37,7 @@
             <br>
           </div>
         </div>
+        
   </div>
 </template>
 

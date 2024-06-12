@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    
     <nav class="navbar fixed-top navbar-expand-lg">
       <div class="container-fluid">
         <!-- Left-aligned Search Bar -->
@@ -19,7 +20,6 @@
             <li class="nav-item">
               <!-- <router-link :to="{ name: 'about' }" class="nav-link" exact-active-class="router-link-exact-active">About</router-link> -->
               <router-link :to="{ name: 'about' }" class="nav-link">About</router-link>
-
             </li>
             
             <!-- If the user is logged in -->
@@ -33,46 +33,17 @@
                 <b-dropdown-item :to="{ name: 'family-recipes' }">My Family Recipes</b-dropdown-item>
               </b-nav-item-dropdown>
               
+                <!-- Navbar tabs -->
+                <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a @click="openModal" class="nav-link">Create New Recipe</a>
+                  </li>
+                </ul>
+                
+                
               <!-- <router-link :to="{ name: 'new-recipe' }" class="nav-link">Create New Recipe</router-link> -->
-              <div>
-                <button @click="openModal" class="nav-link">Create New Recipe</button>
-                  <div v-if="isModalVisible" class="modal-overlay">
-                    <div class="modal">
-                      <!-- <button class="close-button" @click="closeModal">X</button>
-                      <h2>Create New Recipe</h2>
-                      <form @submit.prevent="submitRecipe">
-                        <div>
-                          <label for="recipe-name">Recipe Name:</label>
-                          <input type="text" id="recipe-name" v-model="recipe.name">
-                        </div>
-                        <button type="submit">Submit</button>
-                      </form> -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- <ul class="nav navbar-nav ml-auto" role="navigation">
-                <li><a href="#myModal" data-toggle = "modal" data-target= "#myModal" class="nav-link">Create New Recipe</a></li>
-            </ul>
-            <div class="modal fade" id="myModal">
-              <div class="modal-dialog">
-                  <div class="modal-content"> 
-                      <div class="modal-header">
-                          <h5 class="modal-title">For your Queries</h5> 
-                      </div>
-                      <div class="modal-body">
-                          IF you have any questions, Mess Manager Office number is <strong>+01234567890</strong> or you can email us by <strong>Ouremail@domain.com</strong>>
-                      </div>
-                      <div class="modal-footer">
-                          <button type="button" class="btn btn-primary" data-dismiss = "modal">Close</button>
-                      </div>
-                  </div>
-              </div>
-          </div>
-             -->
-            
-
-              <b-nav-item-dropdown right>
+              
+                <b-nav-item-dropdown right>
                 <template #button-content>
                   Hello {{ $root.store.username }}
                 </template>
@@ -94,22 +65,25 @@
         <!-- Right-aligned Submit Recipe Button -->
       </div>
     </nav>
-    <div class="background-image"></div>
+    
+    
+    <NewRecipeModal v-if="showModal" ref="newRecipeModal"></NewRecipeModal>
+    <div class="background-image">
+     
+    </div>
     <router-view />
-  </div>
+  
+  <!-- Using modifiers -->
+</div>
 </template>
 
 <script>
-
+import NewRecipeModal from './components/NewRecipeModal.vue';
 export default {
   name: "App",
   data() {
     return {
-      isModalVisible: false,
-      recipe: {
-        name: ''
-        // Add other properties as needed
-      },
+      showModal: false,
       searchQuery: ''
     };
   },
@@ -122,18 +96,18 @@ export default {
       this.$router.push("/").catch(() => {
         this.$forceUpdate();
       });
-    },
-    openModal() {
-      this.isModalVisible = true;
-    },
-    closeModal() {
-      this.isModalVisible = false;
-    },
-    submitRecipe() {
-      // Handle the form submission
-      console.log('Recipe submitted:', this.recipe);
-      this.closeModal();
+    },    
+      openModal() {
+      // Call the openModal method of the NewRecipeModal component
+      this.showModal = true;
+     
     }
+  
+  },
+  components: {
+    NewRecipeModal,
+    // MainPage
+
   }
 };
 </script>
