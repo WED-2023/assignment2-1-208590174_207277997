@@ -65,7 +65,7 @@
       </div>
     </nav>
     
-    <NewRecipeModal v-if="showModal" ref="newRecipeModal"></NewRecipeModal>
+    <NewRecipeModal ref="NewRecipeModal"></NewRecipeModal>
     <div class="background-image"></div>
     <router-view />
     
@@ -74,8 +74,6 @@
 
 <script>
 import NewRecipeModal from './components/NewRecipeModal.vue';
-
-
 export default {
   name: "App",
   data() {
@@ -95,16 +93,13 @@ export default {
       });
     },
       openModal() {
-      // Call the openModal method of the NewRecipeModal component
       this.showModal = true;
+      this.$refs.NewRecipeModal.openModal()
      
     }
-  
   },
   components: {
     NewRecipeModal,
-    // MainPage
-
   }
 };
 
