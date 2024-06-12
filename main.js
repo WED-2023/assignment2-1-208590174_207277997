@@ -32,6 +32,7 @@ import {
   ToastPlugin,
   BootstrapVue,
   LayoutPlugin,
+  BModal,
 } from "bootstrap-vue";
 [
   FormGroupPlugin,
@@ -45,6 +46,7 @@ import {
   ToastPlugin,
   BootstrapVue,
   LayoutPlugin,
+  BModal,
 ].forEach((x) => Vue.use(x));
 Vue.use(Vuelidate);
 
