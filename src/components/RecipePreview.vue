@@ -32,7 +32,9 @@
       <div class="recipe-actions">
         <button @click="toggleFavorite" :class="{ 'favorite': isFavorite }">
           <i :class="['fas', 'fa-heart', { 'active': isFavorite }]"></i> 
-          <span>{{ isFavorite ? "Favorited" : "Add to Favorites" }}</span>
+          <span>{{ isFavorite ? "Favorited" : "Add to Favorites" }}
+          </span>
+          response=mockAddFavorite(recipe.ID)
         </button>
         <span v-if="viewed" class="viewed-indicator">Viewed</span>
       </div>
@@ -42,6 +44,7 @@
 
 
 <script>
+import mockAddFavorite from "/services/recipes.js";
 export default {
   // mounted() {
   //   this.axios.get(this.recipe.image).then((i) => {
