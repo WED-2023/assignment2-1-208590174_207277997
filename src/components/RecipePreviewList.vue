@@ -15,6 +15,7 @@ import RecipePreview from "./RecipePreview.vue";
 import { mockGetRecipesPreview } from "../services/recipes.js";
 import { mockGetUserRecipesPreview } from '../services/user.js';
 import { mockGetFavoriteRecipesPreview} from "../services/user.js";
+import { mockGetFamilyRecipesPreview} from "../services/user.js";
 export default {
   name: "RecipePreviewList",
   components: {
@@ -56,10 +57,16 @@ export default {
       }
       else if (this.title ==="Users Favorite Recipes")
       {
-        const response = await mockGetFavoriteRecipesPreview(amount);
+        const response = await mockGetFavoriteRecipesPreview(amount,this.username);
         this.recipes = response.data.recipes;
         this.page_title="Recipes I Loved:"
       
+      }
+      else if(this.title=== "Family Recipes")
+      {
+        const response = await mockGetFavoriteRecipesPreview(amount,this.username);
+        this.recipes = response.data.recipes;
+        this.page_title="My family's recipes:"
       }
     }
        catch (error) {

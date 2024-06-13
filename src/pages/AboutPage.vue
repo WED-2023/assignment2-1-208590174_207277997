@@ -25,11 +25,11 @@
           <div class="text-content">
             <h1>Authors: Ofek Kachlon & Shir Mordechai</h1>
             <p>
-              <b-list-group-item><a class="links" href="https://github.com/shir" target="_blank">Shir's GitHub</a></b-list-group-item>
+              <b-list-group-item><a class="links" href="https://github.com/shirmor" target="_blank">Shir's GitHub</a></b-list-group-item>
             </p>
             
             <p>
-              <b-list-group-item><a class="links" href="https://github.com/ofek" target="_blank">Ofek's GitHub</a></b-list-group-item>
+              <b-list-group-item><a class="links" href="https://github.com/ofekkah" target="_blank">Ofek's GitHub</a></b-list-group-item>
             </p>
             <br>
             <h1 class="shir">Shir's Responsibility:</h1>
@@ -54,15 +54,15 @@ export default {
 
 <style scoped>
 .carousel-slide-title {
-  font-family: "Times New Roman", serif;
+  font-family: 'Segoe UI';
   font-size: 35px;
   color: #000000;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .carousel-slide-text {
-  font-family: "Times New Roman", serif;
-  font-size: 27px;
+  font-family: 'Segoe UI';
+  font-size: 24px;
   color: #000000;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }

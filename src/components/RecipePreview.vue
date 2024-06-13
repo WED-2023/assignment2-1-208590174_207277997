@@ -131,6 +131,7 @@ export default {
   object-fit: cover;
   transition: opacity 0.3s ease;
   cursor: pointer;
+  
 }
 .image-hover {
   position: absolute;
@@ -143,7 +144,8 @@ export default {
   border-radius: 5px;
   opacity: 0.8;
   pointer-events: none;
-}
+  }
+
 .recipe-footer {
   padding: 10px;
   background-color: #f9f9f9;

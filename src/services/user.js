@@ -7,6 +7,7 @@ import recipe_preview from "../assets/mocks/recipe_preview.json";
     return { status: 200, response: { data: { message: "The Recipe successfully saved as favorite", success: true}} };
   }
   
+  
   export function mockAddUserRecipe(recipeDetails) {
     return { status: 200, response: { data: { message: "The Recipe successfully added to My Recipes", success: true}} };
 
@@ -25,7 +26,7 @@ import recipe_preview from "../assets/mocks/recipe_preview.json";
     return { data: { recipes: recipes } };
   }
  
-  export function mockGetFavoriteRecipesPreview(amount = 1) {
+  export function mockGetFavoriteRecipesPreview(amount = 1,username="") {
     const recipeIds = Object.keys(recipe_preview);
     let recipes = [];
   
@@ -36,4 +37,16 @@ import recipe_preview from "../assets/mocks/recipe_preview.json";
   
     return { data: { recipes: recipes } };
   }
+  export function mockGetFamilyRecipesPreview(amount = 1,username="") {
+    const recipeIds = Object.keys(recipe_preview);
+    let recipes = [];
+  
+    for (let i = 0; i < amount; i++) {
+      const randomId = recipeIds[Math.floor(Math.random() * recipeIds.length)];
+      recipes.push(recipe_preview[randomId]);
+    }
+  
+    return { data: { recipes: recipes } };
+  }
+  
  

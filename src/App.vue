@@ -109,7 +109,7 @@ export default {
 @import "@/scss/form-style.scss";
 
 #app {
-  font-family: sans-serif;
+  font-family: 'Segoe UI';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
@@ -118,14 +118,14 @@ export default {
 }
 
 .navbar {
-  font-family: Georgia, serif;
+  font-family: 'Segoe UI';
   display: flex; /* Use flexbox layout */
   justify-content: space-between; /* Distribute space between items */
   align-items: center; /* Center items vertically */
   padding: 20px 20px;
   background-color: rgba(0, 0, 0, 0.5); /* Dark semi-transparent background */
   backdrop-filter: blur(10px); /* Optional: Add blur effect */
-  height: 100px; /* Adjust the height as needed */
+  height: 80px; /* Adjust the height as needed */
   width: 100%; /* Ensure the navbar takes the full width */
 }
 

@@ -44,11 +44,11 @@
   .background-image {
     background: url('@/assets/Screenshot_2.jpg') center/cover;
     position: absolute;
-    top: 0;
+    bottom: 0;
     left: -140px;
     width: 140%;
-    height: 100%;
-    z-index: -1;
+    height: 92%;
+        z-index: -1;
   }
   
   .content {
