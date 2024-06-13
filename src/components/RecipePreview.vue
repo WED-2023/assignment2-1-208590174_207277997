@@ -1,17 +1,19 @@
 <template>
-  <router-link
-    :to="{ name: 'recipe', params: { recipeId: recipe.id } }"
-    class="recipe-preview"
-  >
-    <div class="recipe-body">
-      <img
-        :src="recipe.image"
-        class="recipe-image"
-        @mouseover="showHoverEffect"
-        @mouseout="hideHoverEffect"
-      />
-      <div v-if="hovered" class="image-hover">Click to view recipe</div>
-    </div>
+  <div class="recipe-preview">
+    <router-link
+      :to="{ name: 'recipe', params: { recipeId: recipe.id } }"
+      class="recipe-link"
+    >
+      <div class="recipe-body">
+        <img
+          :src="recipe.image"
+          class="recipe-image"
+          @mouseover="showHoverEffect"
+          @mouseout="hideHoverEffect"
+        />
+        <div v-if="hovered" class="image-hover">Click to view recipe</div>
+      </div>
+    </router-link>
     <div class="recipe-footer">
       <div :title="recipe.title" class="recipe-title">
         {{ recipe.title }}
@@ -28,13 +30,14 @@
         <li v-else>Contains Gluten</li>
       </ul>
       <div class="recipe-actions">
-        <button @click="toggleFavorite">
-          {{ isFavorite ? "Favorited" : "Add to Favorites" }}
+        <button @click="toggleFavorite" :class="{ 'favorite': isFavorite }">
+          <i :class="['fas', 'fa-heart', { 'active': isFavorite }]"></i> 
+          <span>{{ isFavorite ? "Favorited" : "Add to Favorites" }}</span>
         </button>
         <span v-if="viewed" class="viewed-indicator">Viewed</span>
       </div>
     </div>
-  </router-link>
+  </div>
 </template>
 
 

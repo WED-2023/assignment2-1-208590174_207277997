@@ -150,7 +150,7 @@ export default {
       };
 
       const blob = new Blob([JSON.stringify(recipeDetails, null, 2)], { type: "application/json" });
-      FileSaver.saveAs(blob, "new_recipes.json");
+      // FileSaver.saveAs(blob, "new_recipes.json");
       const response = mockAddUserRecipe(recipeDetails);
       this.modalOpen = false;
       
