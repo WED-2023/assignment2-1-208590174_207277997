@@ -30,9 +30,8 @@
         <li v-else>Contains Gluten</li>
       </ul>
       <div class="recipe-actions">
-        <button @click="toggleFavorite" :class="{ 'favorite': isFavorite }">
-          <i :class="['fas', 'fa-heart', { 'active': isFavorite }]"></i> 
-          <span>{{ isFavorite ? "Favorited" : "Add to Favorites" }}</span>
+        <button @click.stop="toggleFavorite">
+          {{ isFavorite ? "Favorited" : "Add to Favorites" }}
         </button>
         <span v-if="viewed" class="viewed-indicator">Viewed</span>
       </div>
@@ -40,19 +39,14 @@
   </div>
 </template>
 
-
 <script>
 export default {
-  // mounted() {
-  //   this.axios.get(this.recipe.image).then((i) => {
-  //     this.image_load = true;
-  //   });
-  // },
+  name: "RecipePreview",
   data() {
     return {
       hovered: false,
-      viewed: false,
-      isFavorite: false
+      viewed: localStorage.getItem(`viewed_${this.recipe.id}`) === 'true',
+      isFavorite: localStorage.getItem(`favorite_${this.recipe.id}`) === 'true'
     };
   },
   methods: {
@@ -77,32 +71,7 @@ export default {
       type: Object,
       required: true
     }
-
-    // id: {
-    //   type: Number,
-    //   required: true
-    // },
-    // title: {
-    //   type: String,
-    //   required: true
-    // },
-    // readyInMinutes: {
-    //   type: Number,
-    //   required: true
-    // },
-    // image: {
-    //   type: String,
-    //   required: true
-    // },
-    // aggregateLikes: {
-    //   type: Number,
-    //   required: false,
-    //   default() {
-    //     return undefined;
-    //   }
-    // }
   }
-  
 };
 </script>
 
@@ -113,11 +82,6 @@ export default {
   height: 100%;
   position: relative;
   margin: 10px 10px;
-}
-.recipe-link {
-  display: block;
-  width: 100%;
-  height: 100%;
 }
 .recipe-body {
   width: 100%;
@@ -130,6 +94,7 @@ export default {
   height: 100%;
   object-fit: cover;
   transition: opacity 0.3s ease;
+  cursor: pointer;
 }
 .image-hover {
   position: absolute;

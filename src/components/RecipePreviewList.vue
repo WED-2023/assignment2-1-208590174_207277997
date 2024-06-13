@@ -4,17 +4,16 @@
       {{ title }}:
       <slot></slot>
     </h3>
-    <b-row>
-      <b-col v-for="r in recipes" :key="r.id">
-        <RecipePreview class="recipePreview" :recipe="r" />
-      </b-col>
-    </b-row>
+    <b-col v-for="r in recipes" :key="r.id">
+      <RecipePreview class="recipePreview" :recipe="r" />
+    </b-col>
   </b-container>
 </template>
 
 <script>
 import RecipePreview from "./RecipePreview.vue";
 import { mockGetRecipesPreview } from "../services/recipes.js";
+
 export default {
   name: "RecipePreviewList",
   components: {
@@ -31,29 +30,18 @@ export default {
       recipes: []
     };
   },
-  mounted() {
-    this.updateRecipes();
-  },
   methods: {
-    async updateRecipes() {
+    async updateRecipes(amount = 3) {
       try {
-        // const response = await this.axios.get(
-        //   this.$root.store.server_domain + "/recipes/random",
-        // );
-
-        const amountToFetch = 1; // Set this to how many recipes you want to fetch
-        const response = mockGetRecipesPreview(amountToFetch);
-
-
-        console.log(response);
-        const recipes = response.data.recipes;
-        console.log(recipes);
-        this.recipes = [];
-        this.recipes.push(...recipes);
+        const response = await mockGetRecipesPreview(amount); // Fetch recipes
+        this.recipes = response.data.recipes;
       } catch (error) {
-        console.log(error);
+        console.error("Error fetching recipes:", error);
       }
     }
+  },
+  mounted() {
+    this.updateRecipes(); // Initial update when component mounts
   }
 };
 </script>
