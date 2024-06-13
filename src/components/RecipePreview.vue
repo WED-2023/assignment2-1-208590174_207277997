@@ -30,32 +30,29 @@
         <li v-else>Contains Gluten</li>
       </ul>
       <div class="recipe-actions">
-        <button @click="toggleFavorite" :class="{ 'favorite': isFavorite }">
-          <i :class="['fas', 'fa-heart', { 'active': isFavorite }]"></i> 
-          <span>{{ isFavorite ? "Favorited" : "Add to Favorites" }}
-          </span>
-          response=mockAddFavorite(recipe.ID)
+
+        <button @click.stop="toggleFavorite">
+          {{ isFavorite ? "Favorited" : "Add to Favorites" }}
         </button>
+        
         <span v-if="viewed" class="viewed-indicator">Viewed</span>
       </div>
     </div>
   </div>
 </template>
 
-
 <script>
-import mockAddFavorite from "/services/recipes.js";
+import { mockAddFavorite } from "../services/user.js";
+import { BButton, BToast } from 'bootstrap-vue';
 export default {
-  // mounted() {
-  //   this.axios.get(this.recipe.image).then((i) => {
-  //     this.image_load = true;
-  //   });
-  // },
+  name: "RecipePreview",
   data() {
     return {
+      variant:"danger",
+      message:'Failed to add the recipe to favorites.',
       hovered: false,
-      viewed: false,
-      isFavorite: false
+      viewed: localStorage.getItem(`viewed_${this.recipe.id}`) === 'true',
+      isFavorite: localStorage.getItem(`favorite_${this.recipe.id}`) === 'true'
     };
   },
   methods: {
@@ -73,39 +70,44 @@ export default {
       event.stopPropagation();
       this.isFavorite = !this.isFavorite;
       localStorage.setItem(`favorite_${this.recipe.id}`, this.isFavorite.toString());
-    }
-  },
+      
+      if (this.isFavorite==true)
+      {
+        if (mockAddFavorite(this.$route.params.recipeId).status === 200 && mockAddFavorite(this.$route.params.recipeId).response.data.success) 
+        {
+        this.message = mockAddFavorite(this.$route.params.recipeId).response.data.message;
+        this.variant="success";
+        }
+        else
+        {
+          this.message='Failed to add the recipe to favorites.';
+          this.variant="danger";
+        }
+      }
+      else 
+      {
+        this.message="Recipe was removed from favorites"
+        this.variant="danger";
+      }
+      this.$bvToast.toast(this.message, {
+      title: 'Notification',
+      autoHideDelay: 5000,
+      toaster: 'b-toaster-bottom-right',
+      appendToast: true,
+      variant:this.variant
+    });
+
+       
+      }
+    
+    },
+  
   props: {
     recipe: {
       type: Object,
       required: true
     }
-
-    // id: {
-    //   type: Number,
-    //   required: true
-    // },
-    // title: {
-    //   type: String,
-    //   required: true
-    // },
-    // readyInMinutes: {
-    //   type: Number,
-    //   required: true
-    // },
-    // image: {
-    //   type: String,
-    //   required: true
-    // },
-    // aggregateLikes: {
-    //   type: Number,
-    //   required: false,
-    //   default() {
-    //     return undefined;
-    //   }
-    // }
   }
-  
 };
 </script>
 
@@ -116,11 +118,6 @@ export default {
   height: 100%;
   position: relative;
   margin: 10px 10px;
-}
-.recipe-link {
-  display: block;
-  width: 100%;
-  height: 100%;
 }
 .recipe-body {
   width: 100%;
@@ -133,6 +130,7 @@ export default {
   height: 100%;
   object-fit: cover;
   transition: opacity 0.3s ease;
+  cursor: pointer;
 }
 .image-hover {
   position: absolute;

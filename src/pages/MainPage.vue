@@ -3,32 +3,70 @@
     <div class="background-image"></div>
     <div class="content">
       <h1 class="title">Main Page</h1>
-      <RecipePreviewList title="Random Recipes" class="RandomRecipes center" />
-      <router-link v-if="!$root.store.username" to="/login" tag="button">You need to Login to view this</router-link>
-      {{ !$root.store.username }}
-      <RecipePreviewList
-        title="Last Viewed Recipes"
-        :class="{
-          RandomRecipes: true,
-          blur: !$root.store.username,
-          center: true
-        }"
-        disabled
-      ></RecipePreviewList>
+      <div class="columns">
+        <div class="left-column">
+          <RecipePreviewList
+            ref="randomRecipesList"
+            title="Explore these recipes"
+            :initialRecipes="randomRecipes"
+            class="RandomRecipes center"
+            :username="$root.store.username"
+          />
+          <button @click="fetchRandomRecipes">Fetch New Recipes</button>
+        </div>
+        <div class="right-column">
+          <router-link v-if="!$root.store.username" to="/login" v-slot="{ href, navigate }" custom>
+            <button :href="href" @click="navigate">Login to view your last viewed recipes</button>
+          </router-link>
+          <RecipePreviewList
+            v-if="$root.store.username"
+            ref="lastViewedRecipesList"
+            title="Last viewed recipes"
+            :initialRecipes="lastViewedRecipes"
+            class="LastViewedRecipes center"
+            :username="$root.store.username"
+          />
+        </div>
+      </div>
     </div>
-    <!-- <div
-      style="position: absolute;top: 70%;left: 50%;transform: translate(-50%, -50%);"
-    >
-      Centeredasdasdad
-    </div>-->
   </div>
 </template>
 
 <script>
 import RecipePreviewList from "../components/RecipePreviewList";
+
 export default {
   components: {
     RecipePreviewList
+  },
+  data() {
+    return {
+      randomRecipes: [], 
+      lastViewedRecipes: [] 
+    };
+  },
+  mounted() {
+    if (this.$root.store.username) {
+      this.fetchLastViewedRecipes(); // Fetch last viewed recipes for logged-in users
+    }
+    this.fetchRandomRecipes(); // Fetch initial random recipes
+  },
+  methods: {
+    async fetchRandomRecipes() {
+      try {
+        await this.$refs.randomRecipesList.updateRecipes(3); // Call updateRecipes with amount
+      } catch (error) {
+        console.error("Error fetching random recipes:", error);
+      }
+    },
+    async fetchLastViewedRecipes() {
+      try {
+        // Fetch last viewed recipes using the RecipePreviewList's updateRecipes method
+        await this.$refs.lastViewedRecipesList.updateRecipes(3); // Call updateRecipes with amount
+      } catch (error) {
+        console.error("Error fetching last viewed recipes:", error);
+      }
+    }
   }
 };
 </script>
@@ -40,27 +78,27 @@ export default {
   height: 100%;
 }
 
-.background-image {
-  background: url('@/assets/nadya-filatova-frTrM7Gdkho-unsplash.jpg') center/cover;
-  position: absolute;
-  top: 0;
-  left: -140px;
-  width: 140%;
-  height: 100%;
-  z-index: -1;
-}
-
 .content {
-  position: relative; /* Ensure content stays above the background */
-  z-index: 1; /* Ensure content stays above the background */
+  position: relative;
+  z-index: 1;
 }
 
-.RandomRecipes {
+.RandomRecipes,
+.LastViewedRecipes {
   margin: 10px 0 10px;
 }
 
+.columns {
+  display: flex;
+}
+
+.left-column,
+.right-column {
+  flex: 1;
+  padding: 10px;
+}
+
 .blur {
-  -webkit-filter: blur(5px); /* Safari 6.0 - 9.0 */
   filter: blur(2px);
 }
 

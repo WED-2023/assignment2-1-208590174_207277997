@@ -2,18 +2,19 @@
     <div class="container">
       <div class="background-image"></div>
       <div class="content">
-        <h1 class="title">My Recipes</h1>
-        <RecipePreviewList title="Users Own Recipes" class="UserRecipes center" />
+        <h1 class="title">My Favorite Recipes</h1>
+        <RecipePreviewList title="Users Favorite Recipes" class="UserFavoriteRecipes center" />
         <router-link v-if="!$root.store.username" to="/login" tag="button">You need to Login to view this</router-link>
         {{ !$root.store.username }}
         <!-- <RecipePreviewList
-          title="Users Own Recipes"
+          title="Users Favorite Recipes"
+          :username="$root.store.username"
           :class="{
             UserRecipes: true,
             blur: !$root.store.username,
             center: true
           }"
-          :username="$root.store.username"
+          
         ></RecipePreviewList> -->
       </div>
       <!-- <div
@@ -27,7 +28,7 @@
   <script>
   import RecipePreviewList from "../components/RecipePreviewList";
   export default {
-    name: "my-recipes",
+    name: "favorite-recipes",
     components: {
       RecipePreviewList
     }
@@ -42,7 +43,7 @@
   }
   
   .background-image {
-    background: url('@/assets/Screenshot_2.jpg') center/cover;
+    background: url('@/assets/Food_with_love.jpg') center/cover;
     position: absolute;
     top: 0;
     left: -140px;
@@ -56,7 +57,7 @@
     z-index: 1; /* Ensure content stays above the background */
   }
   
-  .UserRecipes {
+  .UserFavoriteRecipes {
     margin: 10px 0 10px;
   }
   

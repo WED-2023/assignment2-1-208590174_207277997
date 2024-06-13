@@ -12,4 +12,28 @@ import recipe_preview from "../assets/mocks/recipe_preview.json";
 
   }
   
+  export function mockGetUserRecipesPreview(amount = 1,username="") {
+     //when there is DB, retrieve username's recipes
+    const recipeIds = Object.keys(recipe_preview);
+    let recipes = [];
   
+    for (let i = 0; i < amount; i++) {
+      const randomId = recipeIds[Math.floor(Math.random() * recipeIds.length)];
+      recipes.push(recipe_preview[randomId]);
+    }
+  
+    return { data: { recipes: recipes } };
+  }
+ 
+  export function mockGetFavoriteRecipesPreview(amount = 1) {
+    const recipeIds = Object.keys(recipe_preview);
+    let recipes = [];
+  
+    for (let i = 0; i < amount; i++) {
+      const randomId = recipeIds[Math.floor(Math.random() * recipeIds.length)];
+      recipes.push(recipe_preview[randomId]);
+    }
+  
+    return { data: { recipes: recipes } };
+  }
+ 

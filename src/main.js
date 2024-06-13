@@ -27,7 +27,7 @@ import {
   ToastPlugin,
   LayoutPlugin,
   BootstrapVue,
-  IconsPlugin
+  IconsPlugin,
   } from "bootstrap-vue";
 [
   FormGroupPlugin,
@@ -42,8 +42,10 @@ import {
   LayoutPlugin,
   BootstrapVue,
   IconsPlugin,
+ 
 ].forEach((x) => Vue.use(x));
 Vue.use(Vuelidate);
+
 
 axios.interceptors.request.use(
   function(config) {

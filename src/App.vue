@@ -28,7 +28,7 @@
                 <template #button-content>
                   Personal Region
                 </template>
-                <b-dropdown-item :to="{ name: 'favorites' }">Favorite Recipes</b-dropdown-item>
+                <b-dropdown-item :to="{ name: 'favorite-recipes' }">Favorite Recipes</b-dropdown-item>
                 <b-dropdown-item :to="{ name: 'my-recipes' }">My Recipes</b-dropdown-item>
                 <b-dropdown-item :to="{ name: 'family-recipes' }">My Family Recipes</b-dropdown-item>
               </b-nav-item-dropdown>
