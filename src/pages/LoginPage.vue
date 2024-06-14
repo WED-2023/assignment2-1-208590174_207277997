@@ -134,17 +134,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// .container {
-//   width: 100vw;
-//   height: 100vh;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   background-image: url('@/assets/EmptyName-31.jpg'); 
-//   background-size: cover; /* Ensure the image covers the entire page */
-//   background-position: center; /* Center the background image */
-//   // margin: 0; /* Remove default margin */
-// }
+.container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-size: cover; 
+  background-position: center;
+  margin: 0;
+  padding: 0 20px; /* Add some padding to prevent content from touching edges */
+}
 
 
 .login-card {
