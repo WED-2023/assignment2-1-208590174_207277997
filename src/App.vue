@@ -115,6 +115,9 @@ export default {
   color: #2c3e50;
   min-height: 100vh;
   padding-top: 100px; /* Adjust padding to prevent content from being hidden behind the fixed navbar */
+  background-image: url('@/assets/mae-mu-ppOPjqAJ3Mw-unsplash.jpg'); 
+  background-size: cover;
+  background-position: center;
 }
 
 .navbar {

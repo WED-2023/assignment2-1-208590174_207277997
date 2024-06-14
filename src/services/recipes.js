@@ -24,4 +24,7 @@ export function mockGetRecipeFullDetails(recipeId) {
 
   return { data: { recipe } };
 }
-  
+
+export function mockSearchRecipes(query, amount, selectedCuisines, selectedDiets, selectedIntolerances) {
+  return mockGetRecipesPreview(amount);
+}

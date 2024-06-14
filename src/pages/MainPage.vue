@@ -12,11 +12,11 @@
             class="RandomRecipes center"
             :username="$root.store.username"
           />
-          <button @click="fetchRandomRecipes">Fetch New Recipes</button>
+          <b-button variant="outline-primary" class="more-recipes-button" @click="fetchRandomRecipes">More Recipes</b-button>
         </div>
         <div class="right-column">
           <router-link v-if="!$root.store.username" to="/login" v-slot="{ href, navigate }" custom>
-            <button :href="href" @click="navigate">Login to view your last viewed recipes</button>
+            <b-button variant="outline-primary" class="login-button" :href="href" @click="navigate">Login to view your last viewed recipes</b-button>
           </router-link>
           <RecipePreviewList
             v-if="$root.store.username"
@@ -34,15 +34,17 @@
 
 <script>
 import RecipePreviewList from "../components/RecipePreviewList";
+import { BButton } from 'bootstrap-vue';
 
 export default {
   components: {
-    RecipePreviewList
+    RecipePreviewList,
+    BButton
   },
   data() {
     return {
-      randomRecipes: [], 
-      lastViewedRecipes: [] 
+      randomRecipes: [],
+      lastViewedRecipes: []
     };
   },
   mounted() {
@@ -76,6 +78,7 @@ export default {
   position: relative;
   width: 100%;
   height: 100%;
+  padding-bottom: 70px;
 }
 
 .content {
@@ -96,6 +99,19 @@ export default {
 .right-column {
   flex: 1;
   padding: 10px;
+  position: relative;
+}
+
+.more-recipes-button {
+  position: absolute;
+  left: 160px; 
+  bottom: -30px;
+}
+
+.login-button {
+  position: absolute;
+  left: 70px; 
+
 }
 
 .blur {
