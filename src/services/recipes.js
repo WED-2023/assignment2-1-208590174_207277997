@@ -28,3 +28,4 @@ export function mockGetRecipeFullDetails(recipeId) {
 export function mockSearchRecipes(query, amount, selectedCuisines, selectedDiets, selectedIntolerances) {
   return mockGetRecipesPreview(amount);
 }
+

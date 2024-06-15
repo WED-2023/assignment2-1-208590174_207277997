@@ -1,5 +1,6 @@
 <template>
-  <div class="recipe-preview">
+<div class="recipe-preview">
+  <div @click="markAsViewed">
     <router-link
       :to="{ name: 'recipe', params: { recipeId: recipe.id } }"
       class="recipe-link"
@@ -14,36 +15,35 @@
         <div v-if="hovered" class="image-hover">Click to view recipe</div>
       </div>
     </router-link>
-    <div class="recipe-footer">
-      <div :title="recipe.title" class="recipe-title">
-        {{ recipe.title }}
-      </div>
-
-      <ul class="recipe-overview">
-        <li v-if="recipe.vegan">Vegan</li>
-        <li v-else-if="recipe.vegetarian">Vegetarian</li>
-      </ul>
-      <ul class="recipe-overview">
-        <li>{{ recipe.readyInMinutes }} minutes</li>
-        <li>{{ recipe.aggregateLikes }} likes</li>
-        <li v-if="recipe.glutenFree">Gluten-Free</li>
-        <li v-else>Contains Gluten</li>
-      </ul>
-      <div class="recipe-actions">
-
-        <button @click.stop="toggleFavorite">
-          {{ isFavorite ? "Favorited" : "Add to Favorites" }}
-        </button>
-        
-        <span v-if="viewed" class="viewed-indicator">Viewed</span>
-      </div>
+  </div>
+  <div class="recipe-footer">
+    <div :title="recipe.title" class="recipe-title">
+      {{ recipe.title }}
+    </div>
+    <ul class="recipe-overview">
+      <li v-if="recipe.vegan">Vegan</li>
+      <li v-if="recipe.vegetarian" class="vegetarian">
+        <img src="@/assets/vegetarianism-vegan-friendly-veganism-logo-brand-vegetarian-logo-removebg-preview (1).png" alt="Vegetarian" class="vegetarian-logo"/>
+      </li>
+    </ul>
+    <ul class="recipe-overview">
+      <li>{{ recipe.readyInMinutes }} minutes</li>
+      <li>{{ recipe.aggregateLikes }} likes</li>
+      <li v-if="recipe.glutenFree">Gluten-Free</li>
+      <li v-else>Contains Gluten</li>
+    </ul>
+    <div class="recipe-actions">
+      <button @click.stop="toggleFavorite">
+        {{ isFavorite ? "Favorited" : "Add to Favorites" }}
+      </button>
+      <span v-if="viewed" class="viewed-indicator">Viewed</span>
     </div>
   </div>
+</div>
 </template>
 
 <script>
 import { mockAddFavorite } from "../services/user.js";
-import { BButton, BToast } from 'bootstrap-vue';
 export default {
   name: "RecipePreview",
   data() {
@@ -52,7 +52,7 @@ export default {
       message:'Failed to add the recipe to favorites.',
       hovered: false,
       viewed: localStorage.getItem(`viewed_${this.recipe.id}`) === 'true',
-      isFavorite: localStorage.getItem(`favorite_${this.recipe.id}`) === 'true'
+      isFavorite: localStorage.getItem(`favorite_${this.recipe.id}`) === 'true',
     };
   },
   methods: {
@@ -63,8 +63,11 @@ export default {
       this.hovered = false;
     },
     markAsViewed() {
-      this.viewed = true;
-      localStorage.setItem(`viewed_${this.recipe.id}`, 'true');
+    this.viewed = true;
+    localStorage.setItem(`viewed_${this.recipe.id}`, 'true');
+  },
+    created() {
+    this.checkIfViewed();
     },
     toggleFavorite(event) {
       event.stopPropagation();
@@ -183,7 +186,17 @@ export default {
   cursor: pointer;
 }
 .recipe-actions .viewed-indicator {
-  font-size: 12px;
+  font-size: 16px;
   color: #28a745;
+}
+.vegetarian {
+  justify-content: space-between;
+}
+.vegetarian span {
+  margin-right: 5px;
+}
+.vegetarian-logo {
+  width: 70px;
+  height: 70px;
 }
 </style>

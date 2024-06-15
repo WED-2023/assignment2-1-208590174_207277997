@@ -120,6 +120,7 @@ export default {
   background-position: center;
 }
 
+
 .navbar {
   font-family: 'Segoe UI';
   display: flex; /* Use flexbox layout */
