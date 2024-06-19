@@ -32,9 +32,15 @@
               <b-list-group-item><a class="links" href="https://github.com/ofekkah" target="_blank">Ofek's GitHub</a></b-list-group-item>
             </p>
             <br>
-            <h1 class="shir">Shir's Responsibility:</h1>
-            <h1 class="ofek">Ofek's Responsibility:</h1>
+            <h1 class="shir">Shir's Responsibility: Logic & Design</h1>
+            <h1 class="ofek">Ofek's Responsibility: Logic & Design</h1>
             <br>
+            <p>
+              <b-list-group-item><a class="links" href="https://wed-2023.github.io/207277997/" target="_blank">Shir's Preview Project</a></b-list-group-item>
+            </p>
+            <p>
+              <b-list-group-item><a class="links" href="https://github.com/WED-2023/208590174" target="_blank">Ofek's Preview Project</a></b-list-group-item>
+            </p>
           </div>
         </div>
         
