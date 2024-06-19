@@ -2,7 +2,6 @@
   <div class="container">
     <div class="background-image"></div>
     <div class="content">
-      <h1 class="title">Main Page</h1>
       <div class="columns">
         <div class="left-column">
           <RecipePreviewList
@@ -15,30 +14,38 @@
           <b-button variant="outline-primary" class="more-recipes-button" @click="fetchRandomRecipes">More Recipes</b-button>
         </div>
         <div class="right-column">
-          <router-link v-if="!$root.store.username" to="/login" v-slot="{ href, navigate }" custom>
-            <b-button variant="outline-primary" class="login-button" :href="href" @click="navigate">Login to view your last viewed recipes</b-button>
-          </router-link>
-          <RecipePreviewList
-            v-if="$root.store.username"
-            ref="lastViewedRecipesList"
-            title="Last viewed recipes"
-            :initialRecipes="lastViewedRecipes"
-            class="LastViewedRecipes center"
-            :username="$root.store.username"
-          />
+          <div class="right-column-inner">
+            <template v-if="$root.store.username">
+              <RecipePreviewList
+                ref="lastViewedRecipesList"
+                title="Last viewed recipes"
+                :initialRecipes="lastViewedRecipes"
+                class="LastViewedRecipes center"
+                :username="$root.store.username"
+              />
+            </template>
+            <template v-else>
+              <div class="login-card-wrapper">
+                <LoginPage />
+              </div>
+            </template>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 
+
 <script>
 import RecipePreviewList from "../components/RecipePreviewList";
+import LoginPage from "./LoginPage.vue";
 import { BButton } from 'bootstrap-vue';
 
 export default {
   components: {
     RecipePreviewList,
+    LoginPage,
     BButton
   },
   data() {
@@ -49,14 +56,14 @@ export default {
   },
   mounted() {
     if (this.$root.store.username) {
-      this.fetchLastViewedRecipes(); // Fetch last viewed recipes for logged-in users
+      this.fetchLastViewedRecipes();
     }
     this.fetchRandomRecipes(); // Fetch initial random recipes
   },
   methods: {
     async fetchRandomRecipes() {
       try {
-        await this.$refs.randomRecipesList.updateRecipes(3); // Call updateRecipes with amount
+        await this.$refs.randomRecipesList.updateRecipes(3);
       } catch (error) {
         console.error("Error fetching random recipes:", error);
       }
@@ -64,7 +71,7 @@ export default {
     async fetchLastViewedRecipes() {
       try {
         // Fetch last viewed recipes using the RecipePreviewList's updateRecipes method
-        await this.$refs.lastViewedRecipesList.updateRecipes(3); // Call updateRecipes with amount
+        await this.$refs.lastViewedRecipesList.updateRecipes(3);
       } catch (error) {
         console.error("Error fetching last viewed recipes:", error);
       }
@@ -78,7 +85,7 @@ export default {
   position: relative;
   width: 100%;
   height: 100%;
-  padding-bottom: 70px;
+  padding-bottom: 70px; /* Adjust as needed */
 }
 
 .content {
@@ -88,7 +95,7 @@ export default {
 
 .RandomRecipes,
 .LastViewedRecipes {
-  margin: 10px 0 10px;
+  margin: 10px 0;
 }
 
 .columns {
@@ -99,27 +106,29 @@ export default {
 .right-column {
   flex: 1;
   padding: 10px;
-  position: relative;
+}
+
+.right-column-inner {
+  position: relative; /* Ensure relative positioning for children */
 }
 
 .more-recipes-button {
   position: absolute;
-  left: 160px; 
+  left: 160px;
   bottom: -30px;
 }
 
-.login-button {
-  position: absolute;
-  left: 70px; 
-
+.login-card-wrapper {
+  margin-top: 190px; /* Adjust top margin to move the login card up */
 }
 
-.blur {
-  filter: blur(2px);
-}
-
-::v-deep .blur .recipe-preview {
-  pointer-events: none;
-  cursor: default;
+.login-card {
+  background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  max-width: 428px;
+  width: 100%;
 }
 </style>
+

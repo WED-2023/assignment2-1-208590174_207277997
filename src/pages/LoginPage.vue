@@ -140,20 +140,19 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-size: cover; 
+  background-size: cover;
   background-position: center;
   margin: 0;
   padding: 0 20px; /* Add some padding to prevent content from touching edges */
 }
 
-
 .login-card {
-  background-color: white; /* Ensures readability */
-  padding: 0px;
+  background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+  padding: 10px;
   border-radius: 20px;
-  box-shadow: 10 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for better visibility */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
   max-width: 428px; /* Increase the maximum width */
   width: 100%; /* Ensure the card takes up the available width */
 }
-
 </style>
+

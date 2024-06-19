@@ -1,55 +1,70 @@
 <template>
-<div class="recipe-preview">
-  <div @click="markAsViewed">
-    <router-link
-      :to="{ name: 'recipe', params: { recipeId: recipe.id } }"
-      class="recipe-link"
-    >
-      <div class="recipe-body">
-        <img
-          :src="recipe.image"
-          class="recipe-image"
-          @mouseover="showHoverEffect"
-          @mouseout="hideHoverEffect"
-        />
-        <div v-if="hovered" class="image-hover">Click to view recipe</div>
+  <div class="recipe-preview">
+    <div @click="markAsViewed">
+      <router-link
+        :to="{ name: 'recipe', params: { recipeId: recipe.id } }"
+        class="recipe-link"
+      >
+        <div class="recipe-body">
+          <img
+            :src="recipe.image"
+            class="recipe-image"
+            @mouseover="showHoverEffect"
+            @mouseout="hideHoverEffect"
+          />
+          <div v-if="hovered" class="image-hover">Click to view recipe</div>
+        </div>
+      </router-link>
+    </div>
+    <div class="recipe-footer">
+      <div :title="recipe.title" class="recipe-title">
+        {{ recipe.title }}
       </div>
-    </router-link>
-  </div>
-  <div class="recipe-footer">
-    <div :title="recipe.title" class="recipe-title">
-      {{ recipe.title }}
+      <ul class="recipe-overview">
+        <li v-if="recipe.vegan">
+          <img
+            src="@/assets/veganLogo.png"
+            alt="Vegan"
+            class="diet-logo"
+          />
+        </li>
+        <li v-if="recipe.vegetarian" class="vegetarian">
+          <img
+            src="@/assets/vegetarianism-vegan-friendly-veganism-logo-brand-vegetarian-logo-removebg-preview (1).png"
+            alt="Vegetarian"
+            class="diet-logo"
+          />
+        </li>
+        <li v-if="recipe.glutenFree === false">
+          <img
+            src="@/assets/glutenfree-removebg-preview.png"
+            alt="Contains Gluten"
+            class="diet-logo"
+          />
+        </li>
+      </ul>
+      <ul class="recipe-overview">
+        <li>{{ recipe.readyInMinutes }} minutes</li>
+        <li>{{ recipe.aggregateLikes }} likes</li>
+      </ul>
+      <div class="recipe-actions">
+        <button @click.stop="toggleFavorite" class="favorite-button">
+          <i v-if="isFavorite" class="fas fa-heart heart-icon-filled"></i>
+          <i v-else class="far fa-heart heart-icon-unfilled"></i>
+        </button>
+        <span v-if="viewed" class="viewed-indicator">Viewed</span>
+      </div>
     </div>
-    <ul class="recipe-overview">
-      <li v-if="recipe.vegan">Vegan</li>
-      <li v-if="recipe.vegetarian" class="vegetarian">
-        <img src="@/assets/vegetarianism-vegan-friendly-veganism-logo-brand-vegetarian-logo-removebg-preview (1).png" alt="Vegetarian" class="vegetarian-logo"/>
-      </li>
-    </ul>
-    <ul class="recipe-overview">
-      <li>{{ recipe.readyInMinutes }} minutes</li>
-      <li>{{ recipe.aggregateLikes }} likes</li>
-      <li v-if="recipe.glutenFree">Gluten-Free</li>
-      <li v-else>Contains Gluten</li>
-    </ul>
-    <div class="recipe-actions">
-      <button @click.stop="toggleFavorite">
-        {{ isFavorite ? "Favorited" : "Add to Favorites" }}
-      </button>
-      <span v-if="viewed" class="viewed-indicator">Viewed</span>
-    </div>
   </div>
-</div>
 </template>
 
 <script>
 import { mockAddFavorite } from "../services/user.js";
+
 export default {
   name: "RecipePreview",
   data() {
     return {
-      variant:"danger",
-      message:'Failed to add the recipe to favorites.',
       hovered: false,
       viewed: localStorage.getItem(`viewed_${this.recipe.id}`) === 'true',
       isFavorite: localStorage.getItem(`favorite_${this.recipe.id}`) === 'true',
@@ -63,48 +78,44 @@ export default {
       this.hovered = false;
     },
     markAsViewed() {
-    this.viewed = true;
-    localStorage.setItem(`viewed_${this.recipe.id}`, 'true');
-  },
-    created() {
-    this.checkIfViewed();
+      this.viewed = true;
+      localStorage.setItem(`viewed_${this.recipe.id}`, 'true');
     },
     toggleFavorite(event) {
       event.stopPropagation();
       this.isFavorite = !this.isFavorite;
       localStorage.setItem(`favorite_${this.recipe.id}`, this.isFavorite.toString());
       
-      if (this.isFavorite==true)
-      {
-        if (mockAddFavorite(this.$route.params.recipeId).status === 200 && mockAddFavorite(this.$route.params.recipeId).response.data.success) 
-        {
-        this.message = mockAddFavorite(this.$route.params.recipeId).response.data.message;
-        this.variant="success";
+      if (this.isFavorite) {
+        const response = mockAddFavorite(this.$route.params.recipeId);
+        if (response.status === 200 && response.data.success) {
+          this.$bvToast.toast(response.data.message, {
+            title: 'Notification',
+            autoHideDelay: 5000,
+            toaster: 'b-toaster-bottom-right',
+            appendToast: true,
+            variant: 'success'
+          });
+        } else {
+          this.$bvToast.toast('Failed to add the recipe to favorites.', {
+            title: 'Notification',
+            autoHideDelay: 5000,
+            toaster: 'b-toaster-bottom-right',
+            appendToast: true,
+            variant: 'danger'
+          });
         }
-        else
-        {
-          this.message='Failed to add the recipe to favorites.';
-          this.variant="danger";
-        }
+      } else {
+        this.$bvToast.toast('Recipe was removed from favorites', {
+          title: 'Notification',
+          autoHideDelay: 5000,
+          toaster: 'b-toaster-bottom-right',
+          appendToast: true,
+          variant: 'danger'
+        });
       }
-      else 
-      {
-        this.message="Recipe was removed from favorites"
-        this.variant="danger";
-      }
-      this.$bvToast.toast(this.message, {
-      title: 'Notification',
-      autoHideDelay: 5000,
-      toaster: 'b-toaster-bottom-right',
-      appendToast: true,
-      variant:this.variant
-    });
-
-       
-      }
-    
-    },
-  
+    }
+  },
   props: {
     recipe: {
       type: Object,
@@ -121,12 +132,19 @@ export default {
   height: 100%;
   position: relative;
   margin: 10px 10px;
+  background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+  border-radius: 10px;
+  overflow: hidden; /* Ensure rounded corners are respected */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+  transition: background-color 0.3s ease; /* Smooth transition for background color */
 }
+
 .recipe-body {
   width: 100%;
   height: 200px;
   position: relative;
 }
+
 .recipe-image {
   display: block;
   width: 100%;
@@ -134,8 +152,8 @@ export default {
   object-fit: cover;
   transition: opacity 0.3s ease;
   cursor: pointer;
-  
 }
+
 .image-hover {
   position: absolute;
   top: 50%;
@@ -147,12 +165,13 @@ export default {
   border-radius: 5px;
   opacity: 0.8;
   pointer-events: none;
-  }
+}
 
 .recipe-footer {
   padding: 10px;
   background-color: #f9f9f9;
 }
+
 .recipe-title {
   font-size: 16px;
   font-weight: bold;
@@ -161,6 +180,7 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .recipe-overview {
   list-style: none;
   padding: 0;
@@ -168,35 +188,53 @@ export default {
   display: flex;
   justify-content: space-between;
 }
+
 .recipe-overview li {
   flex: 1;
   text-align: center;
 }
+
 .recipe-actions {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+.favorite-button {
+  padding: 20px 20px; /* Adjust padding for larger size */
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 10px; /* Adjust border-radius for rounded corners */
+  cursor: pointer;
+  font-size: 1.4em; /* Adjust font size for larger button */
+}
+
 .recipe-actions button {
   padding: 5px 10px;
   border: none;
-  background-color: #007bff;
+  background-color: #ffbaba;
   color: white;
   border-radius: 5px;
   cursor: pointer;
 }
+
 .recipe-actions .viewed-indicator {
   font-size: 16px;
   color: #28a745;
 }
-.vegetarian {
-  justify-content: space-between;
+
+.diet-logo {
+  width: 60px; /* Adjust size as needed */
+  height: 60px; /* Adjust size as needed */
+  margin-left: 5px; /* Adjust spacing as needed */
 }
-.vegetarian span {
-  margin-right: 5px;
+
+/* Heart icon colors */
+.heart-icon-filled {
+  color: rgb(255, 0, 0); /* Change color as needed */
 }
-.vegetarian-logo {
-  width: 70px;
-  height: 70px;
+
+.heart-icon-unfilled {
+  color: inherit; /* Inherit parent's color */
 }
 </style>

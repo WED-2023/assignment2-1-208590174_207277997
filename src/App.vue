@@ -1,29 +1,30 @@
 <template>
   <div id="app">
-    
     <nav class="navbar fixed-top navbar-expand-lg">
       <div class="container-fluid">
-        <!-- Left-aligned Search Bar -->
-        <form class="form-inline mr-auto" @submit.prevent="goToSearch">
-          <input class="form-control mr-sm-2" type="search" placeholder="What would you like to cook today?" v-model="searchQuery" aria-label="Search">
-          <b-button size="sm" class="my-2 my-sm-0" type="submit">Search</b-button>
+        <!-- Enhanced Search Bar -->
+        <form class="enhanced-search form-inline mr-auto" @submit.prevent="goToSearch">
+          <div class="search-wrapper">
+            <input class="form-control form-control-search" type="search" placeholder="Search recipes..." v-model="searchQuery" aria-label="Search">
+            <button type="submit" class="btn btn-search">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
         </form>
 
         <!-- Center-aligned Navbar Links -->
         <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <!-- <router-link :to="{ name: 'main' }" class="nav-link" exact-active-class="router-link-exact-active">All Recipes</router-link> -->
-              <router-link :to="{ name: 'main' }" class="nav-link" >All Recipes</router-link>
-
+              <router-link :to="{ name: 'main' }" class="nav-link">All Recipes</router-link>
             </li>
             <li class="nav-item">
-              <!-- <router-link :to="{ name: 'about' }" class="nav-link" exact-active-class="router-link-exact-active">About</router-link> -->
               <router-link :to="{ name: 'about' }" class="nav-link">About</router-link>
             </li>
             
             <!-- If the user is logged in -->
             <template v-if="$root.store.username">
+              <!-- Dropdown for Personal Region -->
               <b-nav-item-dropdown right>
                 <template #button-content>
                   Personal Region
@@ -33,16 +34,13 @@
                 <b-dropdown-item :to="{ name: 'family-recipes' }">My Family Recipes</b-dropdown-item>
               </b-nav-item-dropdown>
               
-                <!-- Navbar tabs -->
-                <ul class="navbar-nav">
-                  <li class="nav-item">
-                    <a @click="openModal" class="nav-link">Create New Recipe</a>
-                  </li>
-                </ul>
-               
-              <!-- <router-link :to="{ name: 'new-recipe' }" class="nav-link">Create New Recipe</router-link> -->
+              <!-- Create New Recipe Link -->
+              <li class="nav-item">
+                <a @click="openModal" class="nav-link">Create New Recipe</a>
+              </li>
               
-                <b-nav-item-dropdown right>
+              <!-- Logout Dropdown -->
+              <b-nav-item-dropdown right>
                 <template #button-content>
                   Hello {{ $root.store.username }}
                 </template>
@@ -51,40 +49,43 @@
             </template>
 
             <!-- If the user is not logged in -->
-            <b-nav-item-dropdown right v-if="!$root.store.username">
-              <template #button-content>
-                Hello Guest
-              </template>
-              <b-dropdown-item :to="{ name: 'register' }">Register</b-dropdown-item>
-              <b-dropdown-item :to="{ name: 'login' }">Login</b-dropdown-item>
-            </b-nav-item-dropdown>
+            <template v-else>
+              <!-- Register Link -->
+              <li class="nav-item">
+                <router-link :to="{ name: 'register' }" class="nav-link">Register</router-link>
+              </li>
+              <!-- Login Link -->
+              <li class="nav-item">
+                <router-link :to="{ name: 'login' }" class="nav-link">Login</router-link>
+              </li>
+            </template>
           </ul>
         </div>
-
-        <!-- Right-aligned Submit Recipe Button -->
       </div>
     </nav>
     
     <NewRecipeModal ref="NewRecipeModal"></NewRecipeModal>
     <div class="background-image"></div>
     <router-view />
-    
   </div>
 </template>
 
 <script>
+import '@fortawesome/fontawesome-free/css/all.min.css';
 import NewRecipeModal from './components/NewRecipeModal.vue';
+
 export default {
   name: "App",
   data() {
     return {
-      showModal: false,
       searchQuery: ''
     };
   },
   methods: {
     goToSearch() {
-      this.$router.push({ name: 'search', query: { q: this.searchQuery } });
+      if (this.searchQuery.trim() !== '') {
+        this.$router.push({ name: 'search', query: { q: this.searchQuery } });
+      }
     },
     logout() {
       this.$root.store.logout();
@@ -92,17 +93,14 @@ export default {
         this.$forceUpdate();
       });
     },
-      openModal() {
-      this.showModal = true;
-      this.$refs.NewRecipeModal.openModal()
-     
+    openModal() {
+      this.$refs.NewRecipeModal.openModal();
     }
   },
   components: {
     NewRecipeModal,
   }
 };
-
 </script>
 
 <style lang="scss">
@@ -119,7 +117,6 @@ export default {
   background-size: cover;
   background-position: center;
 }
-
 
 .navbar {
   font-family: 'Segoe UI';
@@ -167,8 +164,42 @@ export default {
   border: none;
   font-weight: bold;
   padding: 10px 20px;
-  border-radius: 5px;
+  border-radius: 5px;
 }
 
+/* Enhanced Search Bar Styles */
+.enhanced-search {
+  position: relative;
+  margin-right: auto; /* Push the search bar to the left */
+}
 
+.search-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.form-control-search {
+  width: calc(100% - 40px);
+  border: 2px solid #ffffff; /* White border */
+  padding: 10px;
+  border-radius: 20px; /* Rounded corners */
+  background-color: rgba(255, 255, 255, 0.1); /* Transparent background */
+  color: #ffffff; /* White text */
+}
+
+.btn-search {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  padding: 8px;
+}
+
+.btn-search:hover {
+  color: #007bff; /* Change color on hover */
+}
 </style>
