@@ -86,9 +86,9 @@ export default {
       this.isFavorite = !this.isFavorite;
       localStorage.setItem(`favorite_${this.recipe.id}`, this.isFavorite.toString());
       
-      if (this.isFavorite) {
+      if (this.isFavorite==true) {
         const response = mockAddFavorite(this.$route.params.recipeId);
-        if (response.status === 200 && response.data.success) {
+         if (response.status === 200 && response.data.success) {
           this.$bvToast.toast(response.data.message, {
             title: 'Notification',
             autoHideDelay: 5000,
@@ -96,7 +96,8 @@ export default {
             appendToast: true,
             variant: 'success'
           });
-        } else {
+        } 
+        else {
           this.$bvToast.toast('Failed to add the recipe to favorites.', {
             title: 'Notification',
             autoHideDelay: 5000,

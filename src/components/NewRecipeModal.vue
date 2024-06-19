@@ -62,8 +62,8 @@
       <textarea class="form-control" id="instructions" v-model="newRecipe.instructions"></textarea>
     </div>
     <div class="modal-footer">
-      <button type="submit" class="btn btn-primary">Create Recipe</button>
-      <button type="button" class="btn btn-secondary" @click="closeModal">Close</button>
+      <button type="submit" class="btn btn-primary" @click="closeModal">Create Recipe</button>
+      <button type="button" class="btn btn-secondary">Close</button>
     </div>
   </form>
   </b-modal>
@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import {mockAddUserRecipe} from "../services/auth.js";
+import {mockAddUserRecipe} from "../services/user.js";
 import FileSaver from 'file-saver';
 export default {
   data() {
@@ -133,7 +133,13 @@ export default {
     },
     createRecipe() {
       const transformedIngredients = this.transformIngredients(this.newRecipe.extendedIngredients);
-      const recipeDetails = {
+      if (transformedIngredients.length == 0 || isEmpty(this.newRecipe.title) || isEmpty(this.newRecipe.readyInMinutes) || isEmpty(this.newRecipe.aggregateLikes)|| isEmpty(this.newRecipe.summary)||isEmpty(this.newRecipe.instructions))
+      {
+        console.error("Validation failed: Please ensure all fields are filled and there is at least one ingredient.");
+      }
+      else
+        {
+        const recipeDetails = {
         id: Math.floor(Math.random() * 1000000), // Generating a random ID for demonstration
         image: this.newRecipe.image,
         title: this.newRecipe.title,
@@ -153,9 +159,17 @@ export default {
       // FileSaver.saveAs(blob, "new_recipes.json");
       const response = mockAddUserRecipe(recipeDetails);
       this.modalOpen = false;
-      
+      this.$bvToast.toast("Recipe has been created successfully!", {
+            title: 'Notification',
+            autoHideDelay: 5000,
+            toaster: 'b-toaster-bottom-right',
+            appendToast: true,
+            variant: 'success'
+          });
       console.log("Recipe Created:", recipeDetails);
     }
+   
+  }
   }
 };
 
