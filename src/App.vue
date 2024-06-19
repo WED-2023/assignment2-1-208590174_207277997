@@ -29,9 +29,9 @@
                 <template #button-content>
                   Personal Region
                 </template>
-                <b-dropdown-item :to="{ name: 'favorite-recipes' }">Favorite Recipes</b-dropdown-item>
-                <b-dropdown-item :to="{ name: 'my-recipes' }">My Recipes</b-dropdown-item>
-                <b-dropdown-item :to="{ name: 'family-recipes' }">My Family Recipes</b-dropdown-item>
+                <b-dropdown-item :to="{ name: 'favorite-recipes' }" class="custom-dropdown-item">Favorite Recipes</b-dropdown-item>
+                <b-dropdown-item :to="{ name: 'my-recipes' }" class="custom-dropdown-item">My Recipes</b-dropdown-item>
+                <b-dropdown-item :to="{ name: 'family-recipes' }" class="custom-dropdown-item">My Family Recipes</b-dropdown-item>
               </b-nav-item-dropdown>
               
               <!-- Create New Recipe Link -->
@@ -56,7 +56,7 @@
               </li>
               <!-- Login Link -->
               <li class="nav-item">
-                <router-link :to="{ name: 'login' }" class="nav-link btn-link">Login</router-link>
+                <router-link :to="{ name: 'login' }" class="nav-link btn-link">Log In</router-link>
               </li>
             </template>
           </ul>
@@ -125,7 +125,7 @@ export default {
   justify-content: space-between; /* Distribute space between items */
   align-items: center; /* Center items vertically */
   padding: 20px 20px;
-  background-color: rgba(0, 0, 0, 0.5); /* Dark semi-transparent background */
+  background-color: rgba(0, 0, 0, 0.7); /* Transparent black background */
   backdrop-filter: blur(10px); /* Optional: Add blur effect */
   height: 80px; /* Adjust the height as needed */
   width: 100%; /* Ensure the navbar takes the full width */
@@ -220,5 +220,9 @@ export default {
 .btn-link:hover {
   background-color: rgba(255, 255, 255, 0.1); /* Slightly transparent background on hover */
   color: #ffffff; /* Text color stays white */
+}
+
+.custom-dropdown-item {
+  color: #ffffff !important; /* Ensure dropdown item text is white */
 }
 </style>
