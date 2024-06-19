@@ -52,11 +52,11 @@
             <template v-else>
               <!-- Register Link -->
               <li class="nav-item">
-                <router-link :to="{ name: 'register' }" class="nav-link">Register</router-link>
+                <router-link :to="{ name: 'register' }" class="nav-link btn-link">Register</router-link>
               </li>
               <!-- Login Link -->
               <li class="nav-item">
-                <router-link :to="{ name: 'login' }" class="nav-link">Login</router-link>
+                <router-link :to="{ name: 'login' }" class="nav-link btn-link">Login</router-link>
               </li>
             </template>
           </ul>
@@ -69,6 +69,7 @@
     <router-view />
   </div>
 </template>
+
 
 <script>
 import '@fortawesome/fontawesome-free/css/all.min.css';
@@ -200,6 +201,24 @@ export default {
 }
 
 .btn-search:hover {
-  color: #007bff; /* Change color on hover */
+  color: #ffffff; /* Change color on hover */
+}
+
+/* Styles for Login and Register buttons */
+.btn-link {
+  display: inline-block;
+  padding: 8px 15px;
+  margin: 5px;
+  background-color: transparent;
+  border: 2px solid #ffffff;
+  border-radius: 20px;
+  color: #ffffff;
+  text-align: center;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-link:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* Slightly transparent background on hover */
+  color: #ffffff; /* Text color stays white */
 }
 </style>

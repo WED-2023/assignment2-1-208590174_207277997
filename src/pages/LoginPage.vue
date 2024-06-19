@@ -143,7 +143,7 @@ export default {
   background-size: cover;
   background-position: center;
   margin: 0;
-  padding: 0 20px; /* Add some padding to prevent content from touching edges */
+  padding: 0 0px; /* Add some padding to prevent content from touching edges */
 }
 
 .login-card {
@@ -153,7 +153,10 @@ export default {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
   max-width: 428px; /* Increase the maximum width */
   width: 100%; /* Ensure the card takes up the available width */
-  margin-left: 210px; /* Adjust margin-left as needed */
+  margin-left: 20px; /* Adjust margin-left as needed */
+
 }
+
+
 </style>
 

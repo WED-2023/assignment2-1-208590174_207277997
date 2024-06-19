@@ -124,11 +124,13 @@ export default {
 
 .login-card {
   background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
-  padding: 20px;
+  padding: 30px;
   border-radius: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
   max-width: 428px;
-  width: 100%;
+  width: 200%;
+  margin-left: 0px; /* Adjust margin-left as needed */
+
 }
 </style>
 
