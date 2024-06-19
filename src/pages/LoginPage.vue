@@ -153,6 +153,7 @@ export default {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
   max-width: 428px; /* Increase the maximum width */
   width: 100%; /* Ensure the card takes up the available width */
+  margin-left: 210px; /* Adjust margin-left as needed */
 }
 </style>
 
