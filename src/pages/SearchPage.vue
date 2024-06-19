@@ -4,8 +4,16 @@
       <input
         type="text"
         v-model="query"
+        @input="onInput"
+        @focus="showRecentSearches = true"
+        @blur="hideRecentSearches"
         placeholder="Search for recipes..."
       />
+      <ul v-if="showRecentSearches && recentSearches.length" class="recent-searches">
+        <li v-for="(search, index) in recentSearches" :key="index" @mousedown="selectRecentSearch(search)">
+          {{ search }}
+        </li>
+      </ul>
       <div class="amount-container">
         <label for="amount" class="amount-label">Number of results:</label>
         <select v-model="amount" id="amount" class="amount-input">
@@ -26,7 +34,6 @@
         </select>
       </div>
     </div>
-
     <div class="main-content">
       <div v-if="showFilters" class="filter-toolbar">
         <h3 class="filter-title">Filters</h3>
@@ -34,59 +41,29 @@
           <!-- Cuisine Filters -->
           <div class="filter-category">
             <h4>Cuisine</h4>
-            <div
-              v-for="(cuisine, index) in cuisineOptions"
-              :key="index"
-              class="filter-option"
-            >
-              <input
-                type="checkbox"
-                :id="'cuisine-' + cuisine.value"
-                :value="cuisine.value"
-                v-model="selectedCuisines"
-              />
+            <div v-for="(cuisine, index) in cuisineOptions" :key="index" class="filter-option">
+              <input type="checkbox" :id="'cuisine-' + cuisine.value" :value="cuisine.value" v-model="selectedCuisines" />
               <label :for="'cuisine-' + cuisine.value">{{ cuisine.text }}</label>
             </div>
           </div>
-
           <!-- Diet Filters -->
           <div class="filter-category">
             <h4>Diet</h4>
-            <div
-              v-for="(diet, index) in dietOptions"
-              :key="index"
-              class="filter-option"
-            >
-              <input
-                type="checkbox"
-                :id="'diet-' + diet.value"
-                :value="diet.value"
-                v-model="selectedDiets"
-              />
+            <div v-for="(diet, index) in dietOptions" :key="index" class="filter-option">
+              <input type="checkbox" :id="'diet-' + diet.value" :value="diet.value" v-model="selectedDiets" />
               <label :for="'diet-' + diet.value">{{ diet.text }}</label>
             </div>
           </div>
-
           <!-- Intolerance Filters -->
           <div class="filter-category">
             <h4>Intolerances</h4>
-            <div
-              v-for="(intolerance, index) in intoleranceOptions"
-              :key="index"
-              class="filter-option"
-            >
-              <input
-                type="checkbox"
-                :id="'intolerance-' + intolerance.value"
-                :value="intolerance.value"
-                v-model="selectedIntolerances"
-              />
+            <div v-for="(intolerance, index) in intoleranceOptions" :key="index" class="filter-option">
+              <input type="checkbox" :id="'intolerance-' + intolerance.value" :value="intolerance.value" v-model="selectedIntolerances" />
               <label :for="'intolerance-' + intolerance.value">{{ intolerance.text }}</label>
             </div>
           </div>
         </div>
       </div>
-
       <b-container class="recipes-container">
         <b-row v-for="r in sortedRecipes" :key="r.id">
           <RecipePreview class="recipePreview" :recipe="r" />
@@ -95,7 +72,6 @@
     </div>
   </div>
 </template>
-
 
 <script>
 import RecipePreview from "../components/RecipePreview";
@@ -111,15 +87,17 @@ export default {
     return {
       query: "",
       recipes: [],
-      amount: 5, // Default amount of results
+      amount: 5,
       selectedCuisines: [],
       selectedDiets: [],
       selectedIntolerances: [],
       cuisineOptions,
       dietOptions,
       intoleranceOptions,
-      showFilters: false, // Control visibility of filters
-      sortCriteria: "preparationTime" // Default sort criteria
+      showFilters: false,
+      sortCriteria: "preparationTime",
+      recentSearches: JSON.parse(localStorage.getItem('recentSearches')) || [],
+      showRecentSearches: false,
     };
   },
   computed: {
@@ -135,6 +113,7 @@ export default {
   methods: {
     async searchRecipes() {
       if (this.query.trim() === "") return;
+      this.updateRecentSearches(this.query);
       try {
         const response = await mockSearchRecipes(
           this.query,
@@ -150,13 +129,34 @@ export default {
         console.log(error);
       }
     },
+    updateRecentSearches(query) {
+      if (!this.recentSearches.includes(query)) {
+        this.recentSearches.unshift(query);
+        if (this.recentSearches.length > 5) {
+          this.recentSearches.pop();
+        }
+        localStorage.setItem('recentSearches', JSON.stringify(this.recentSearches));
+      }
+    },
+    selectRecentSearch(search) {
+      this.query = search;
+      this.searchRecipes();
+      this.showRecentSearches = false;
+    },
+    onInput() {
+      this.showRecentSearches = true;
+    },
+    hideRecentSearches() {
+      setTimeout(() => {
+        this.showRecentSearches = false;
+      }, 200); // Delay to allow clicking on recent searches
+    },
     toggleFilters() {
       this.showFilters = !this.showFilters;
     },
   },
 };
 </script>
-
 <style scoped>
 .search-container {
   padding: 20px;
@@ -175,9 +175,9 @@ export default {
   flex: 1;
   padding: 10px;
   font-size: 16px;
-  border-radius: 10px; /* Rounded corners */
-  background: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
-  border: 1px solid #ccc; /* Optional: Add border to match buttons */
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid #ccc;
 }
 
 .amount-container {
@@ -194,9 +194,9 @@ export default {
 .amount-input {
   padding: 10px;
   font-size: 16px;
-  border-radius: 10px; /* Rounded corners */
-  background: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
-  border: 1px solid #ccc; /* Optional: Add border to match buttons */
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid #ccc;
 }
 
 .action-buttons {
@@ -212,41 +212,41 @@ export default {
 .sort-input {
   padding: 10px;
   font-size: 16px;
-  border-radius: 10px; /* Rounded corners */
-  background: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
-  border: 1px solid #ccc; /* Optional: Add border to match buttons */
-  margin-left: 10px; /* Adjusted margin to move it right */
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid #ccc;
+  margin-left: 10px;
 }
 
 .filter-toggle {
   display: flex;
-  justify-content: flex-start; /* Align the button to the left */
+  justify-content: flex-start;
   margin-bottom: 20px;
 }
 
 .filter-toggle button {
   padding: 10px 20px;
   font-size: 16px;
-  border-radius: 10px; /* Rounded corners */
-  background: transparent; /* Transparent background */
+  border-radius: 10px;
+  background: transparent;
   color: #007bff;
-  border: 1px solid #007bff; /* Solid border for better visibility */
+  border: 1px solid #007bff;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 .filter-toggle button:hover {
-  background-color: rgba(0, 123, 255, 0.1); /* Slightly colored background on hover */
+  background-color: rgba(0, 123, 255, 0.1);
 }
 
 .action-button,
 .sort-input {
   padding: 10px 20px;
   font-size: 16px;
-  border-radius: 10px; /* Rounded corners */
-  background: transparent; /* Transparent background */
+  border-radius: 10px;
+  background: transparent;
   color: #007bff;
-  border: 1px solid #007bff; /* Solid border for better visibility */
+  border: 1px solid #007bff;
   cursor: pointer;
   transition: background-color 0.3s ease;
   margin-left: 10px;
@@ -254,7 +254,7 @@ export default {
 
 .action-button:hover,
 .sort-input:hover {
-  background-color: rgba(0, 123, 255, 0.1); /* Slightly colored background on hover */
+  background-color: rgba(0, 123, 255, 0.1);
 }
 
 .main-content {
@@ -269,10 +269,10 @@ export default {
 .filter-toolbar {
   flex: 1;
   padding: 20px;
-  background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
+  background-color: rgba(255, 255, 255, 0.9);
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  margin-right: 20px; /* Add margin to separate it from the recipes */
+  margin-right: 20px;
 }
 
 .filter-title {
@@ -284,16 +284,16 @@ export default {
 
 .filters-columns {
   display: flex;
-  justify-content: space-between; 
+  justify-content: space-between;
 }
 
 .filter-category {
   flex: 1;
-  margin-right: 30px; 
+  margin-right: 30px;
 }
 
 .filter-category:last-child {
-  margin-right: 0; 
+  margin-right: 0;
 }
 
 .filter-category h4 {
@@ -312,5 +312,28 @@ export default {
 
 .filter-option label {
   font-size: 14px;
+}
+
+.recent-searches {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 0 0 10px 10px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  z-index: 10;
+}
+
+.recent-searches li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.recent-searches li:hover {
+  background-color: #f1f1f1;
 }
 </style>
