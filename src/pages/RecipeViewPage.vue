@@ -48,7 +48,13 @@
 
 <script>
 import { mockGetRecipeFullDetails } from "../services/recipes.js";
+import RecipePreview from "../components/RecipePreview";
+
 export default {
+  name: "RecipePreview",
+  components: {
+    RecipePreview,
+  },
   data() {
     return {
       recipe: null
