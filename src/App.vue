@@ -11,6 +11,12 @@
             </button>
           </div>
         </form>
+
+        <!-- Logo in the center -->
+        <router-link to="/" class="navbar-brand mx-auto">
+          <img src="@/assets/logonavbar.png" alt="Logo" class="navbar-logo">
+        </router-link>
+
         <!-- Center-aligned Navbar Links -->
         <div class="navbar-nav" >
           <!-- <ul class="navbar-nav"> -->
@@ -117,9 +123,9 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.137);
   backdrop-filter: blur(10px);
-  height: 80px;
+  height: 90px;
   width: 100%;
   color: #f3eeee; /* Main text color for navbar */
 }
@@ -128,6 +134,16 @@ export default {
   display: flex;
   align-items: center;
   margin-left: auto;
+}
+
+.navbar-brand {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: -55px; 
+}
+.navbar-logo {
+  height: 200px; /* Adjust the height as needed */
 }
 
 a.btn-link {

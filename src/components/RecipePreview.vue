@@ -69,7 +69,7 @@ export default {
   },
   computed: {
     viewed() {
-      return localStorage.getItem(`viewed_${this.recipe.id}`) === 'false';
+      return localStorage.getItem(`viewed_${this.recipe.id}`) === 'true';
     }
   },
   methods: {
