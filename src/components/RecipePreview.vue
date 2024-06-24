@@ -47,6 +47,7 @@
       </ul>
       <div class="recipe-actions">
         <button @click.stop="toggleFavorite" class="favorite-button">
+          Add to favorites
           <i v-if="isFavorite" class="fas fa-heart heart-icon-filled"></i>
           <i v-else class="far fa-heart heart-icon-unfilled"></i>
         </button>
@@ -209,13 +210,13 @@ export default {
   color: white;
   border-radius: 10px; /* Adjust border-radius for rounded corners */
   cursor: pointer;
-  font-size: 1.4em; /* Adjust font size for larger button */
+  font-size: 1em; /* Adjust font size for larger button */
 }
 
 .recipe-actions button {
   padding: 5px 10px;
   border: none;
-  background-color: #ffbaba;
+  background-color: #f8b9b9;
   color: white;
   border-radius: 5px;
   cursor: pointer;
