@@ -48,3 +48,6 @@ export function mockSearchRecipes(query, amount, selectedCuisines, selectedDiets
   return mockGetRecipesPreview(amount);
 }
 
+export function mockGetSpecificRecipePreview(recipeId) {
+    return recipe_preview[recipeId];
+}

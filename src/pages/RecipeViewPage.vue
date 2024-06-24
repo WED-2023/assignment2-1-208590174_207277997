@@ -4,11 +4,9 @@
       <div class="recipe-header mt-3 mb-4">
         <h1>{{ recipe.title }}</h1>
         <!-- <img :src="recipe.image" class="center" /> -->
-        <b-container>
         <b-col>
-          <RecipePreview class="recipePreview" :recipe="recipe" />
-        </b-col>
-      </b-container>
+        <RecipePreview class="recipe-preview" :recipe="preview_response" />
+      </b-col>
       </div>
       <div class="recipe-body">
         <div class="wrapper">
@@ -47,16 +45,25 @@
 </template>
 
 <script>
+import RecipePreview from "../components/RecipePreview.vue";
 import { mockGetRecipeFullDetails } from "../services/recipes.js";
+import { mockGetSpecificRecipePreview } from "../services/recipes.js";
 export default {
+  
+  components: {
+    RecipePreview,
+      },
   data() {
     return {
-      recipe: null
+      recipe: null,
+      
+      preview_response:null
     };
   },
   async created() {
     try {
       let response;
+    
       // response = this.$route.params.response;
 
       try {
@@ -66,9 +73,9 @@ export default {
         //     withCredentials: true
         //   }
         // );
-
         response = mockGetRecipeFullDetails(this.$route.params.recipeId);
-
+        this.preview_response = await mockGetSpecificRecipePreview(this.$route.params.recipeId);
+        
         // console.log("response.status", response.status);
         // if (response.status !== 200) this.$router.replace("/NotFound");
       } catch (error) {
@@ -124,7 +131,15 @@ export default {
   display: block;
   margin-left: auto;
   margin-right: auto;
-  width: 50%;
+  width: 300px;
+}
+.recipe-preview
+{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 700px;
+  min-height: auto;
 }
 /* .recipe-header{
 
