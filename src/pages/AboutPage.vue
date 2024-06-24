@@ -39,7 +39,7 @@
               <b-list-group-item><a class="links" href="https://wed-2023.github.io/207277997/" target="_blank">Shir's Preview Project</a></b-list-group-item>
             </p>
             <p>
-              <b-list-group-item><a class="links" href="https://github.com/WED-2023/208590174" target="_blank">Ofek's Preview Project</a></b-list-group-item>
+              <b-list-group-item><a class="links" href="https://wed-2023.github.io/208590174/" target="_blank">Ofek's Preview Project</a></b-list-group-item>
             </p>
           </div>
         </div>
