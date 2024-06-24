@@ -53,6 +53,7 @@ export default {
   components: {
     RecipePreview,
       },
+
   data() {
     return {
       recipe: null,

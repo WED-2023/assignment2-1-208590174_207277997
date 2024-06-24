@@ -166,7 +166,7 @@ export default {
 <style scoped>
 .search-container {
   padding: 20px;
-  max-width: 1200px;
+  max-width: 1000px;
   margin: auto;
 }
 
@@ -341,5 +341,9 @@ export default {
 
 .recent-searches li:hover {
   background-color: #f1f1f1;
+}
+
+.recipePreview {
+  width: 500px; /* Smaller width for the recipe preview */
 }
 </style>
