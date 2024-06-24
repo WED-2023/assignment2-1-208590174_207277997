@@ -100,6 +100,12 @@ export default {
       showRecentSearches: false,
     };
   },
+  mounted() {
+    this.query = this.$route.query.q || ''; // Initialize with the query from route
+    if (this.query.trim() !== '') {
+      this.searchRecipes(); // Perform search immediately if query is present
+    }
+  },
   computed: {
     sortedRecipes() {
       if (this.sortCriteria === "preparationTime") {

@@ -333,7 +333,7 @@ export default {
 .register-card {
   width: 90%;
   max-width: 500px;
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0.8); /* Transparent white */
   padding: 20px;
   border-radius: 15px; /* Rounded corners */
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1); /* Box shadow */

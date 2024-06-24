@@ -1,21 +1,19 @@
 <template>
   <div class="recipe-preview">
-    <div @click="markAsViewed">
-      <router-link
-        :to="{ name: 'recipe', params: { recipeId: recipe.id } }"
-        class="recipe-link"
-      >
-        <div class="recipe-body">
-          <img
-            :src="recipe.image"
-            class="recipe-image"
-            @mouseover="showHoverEffect"
-            @mouseout="hideHoverEffect"
-          />
-          <div v-if="hovered" class="image-hover">Click to view recipe</div>
-        </div>
-      </router-link>
-    </div>
+    <router-link
+      :to="{ name: 'recipe', params: { recipeId: recipe.id } }"
+      class="recipe-link"
+    >
+      <div class="recipe-body" @click="markAsViewed">
+        <img
+          :src="recipe.image"
+          class="recipe-image"
+          @mouseover="showHoverEffect"
+          @mouseout="hideHoverEffect"
+        />
+        <div v-if="hovered" class="image-hover">Click to view recipe</div>
+      </div>
+    </router-link>
     <div class="recipe-footer">
       <div :title="recipe.title" class="recipe-title">
         {{ recipe.title }}
@@ -66,9 +64,13 @@ export default {
   data() {
     return {
       hovered: false,
-      viewed: localStorage.getItem(`viewed_${this.recipe.id}`) === 'true',
       isFavorite: localStorage.getItem(`favorite_${this.recipe.id}`) === 'true',
     };
+  },
+  computed: {
+    viewed() {
+      return localStorage.getItem(`viewed_${this.recipe.id}`) === 'false';
+    }
   },
   methods: {
     showHoverEffect() {

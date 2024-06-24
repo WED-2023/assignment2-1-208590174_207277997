@@ -37,6 +37,7 @@ import recipe_preview from "../assets/mocks/recipe_preview.json";
   
     return { data: { recipes: recipes } };
   }
+  
   export function mockGetFamilyRecipesPreview(amount = 1,username="") {
     const recipeIds = Object.keys(recipe_preview);
     let recipes = [];
