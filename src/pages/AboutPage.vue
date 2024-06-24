@@ -8,7 +8,7 @@
           </div>
           <div style="flex: 2; padding-left: 0px;">
             <br><br><br>
-            <h1 class="carousel-slide-title"><b>Welcome to Grandma's Recipes Website</b></h1>
+            <h1 class="carousel-slide-title"><b>Welcome to D'Foodie Recipes Website</b></h1>
             <p class="carousel-slide-text">
               Embark on a culinary adventure with us, where flavors know no bounds. Explore a diverse collection of recipes from around the world and unleash your creativity by crafting your own culinary masterpieces.
               <br>
