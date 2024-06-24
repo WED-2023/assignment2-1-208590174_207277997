@@ -199,5 +199,9 @@ a.btn-link {
 .custom-dropdown-item {
   color: #ffffff 
 }
+.nav-link {
+  cursor: pointer;
+}
+
 
 </style>

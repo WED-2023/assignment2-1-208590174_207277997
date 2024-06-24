@@ -4,7 +4,9 @@
       {{page_title}}
       <slot></slot>
     </h3>
-    <b-col v-for="r in recipes" :key="r.id">
+    <b-col v-for="(r,index) in recipes" :key="r.id">
+      <br>
+      <h5 v-show="isFamily">{{ description[index] }}</h5>
       <RecipePreview class="recipePreview" :recipe="r" />
     </b-col>
   </b-container>
@@ -31,7 +33,9 @@ export default {
   data() {
     return {
       page_title:" ",
-      recipes: []
+      description:["My grandpa's favorite dish for Shavu'ot Holiday","My mom's most famous dish for Saturday Breakfast", "My Dad's Artichok for Monday Evening"],
+      recipes: [],
+      isFamily: false
     };
   },
   methods: {
@@ -64,7 +68,8 @@ export default {
       }
       else if(this.title=== "Family Recipes")
       {
-        const response = await mockGetFavoriteRecipesPreview(amount,this.username);
+        this.isFamily=true;
+        const response = await mockGetFamilyRecipesPreview(amount,this.username);
         this.recipes = response.data.recipes;
         this.page_title="My family's recipes:"
       }
@@ -77,7 +82,9 @@ export default {
   },
   mounted() {
     this.updateRecipes(); // Initial update when component mounts
-  }
+  },
+  
+
 };
 </script>
 

@@ -3,7 +3,12 @@
     <div v-if="recipe">
       <div class="recipe-header mt-3 mb-4">
         <h1>{{ recipe.title }}</h1>
-        <img :src="recipe.image" class="center" />
+        <!-- <img :src="recipe.image" class="center" /> -->
+        <b-container>
+        <b-col>
+          <RecipePreview class="recipePreview" :recipe="recipe" />
+        </b-col>
+      </b-container>
       </div>
       <div class="recipe-body">
         <div class="wrapper">
