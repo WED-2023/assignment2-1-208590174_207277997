@@ -61,11 +61,23 @@ export default {
       }
       else if (this.title ==="Users Favorite Recipes")
       {
-        const response = await mockGetFavoriteRecipesPreview(amount,this.username);
-        this.recipes = response.data.recipes;
+        // const response = await mockGetFavoriteRecipesPreview(amount,this.username);   
+          try 
+          {
+          this.axios.defaults.withCredentials = true;
+          const response = await this.axios.get(
+          this.$root.store.server_domain +"/users/favorites");
+        } 
+        catch (err) {
+          console.log(err.response);
+        }
+        // this.recipes = response.data.recipes;
+        this.recipes = response;
         this.page_title="Recipes I Loved:"
+        }
+        
       
-      }
+      
       else if(this.title=== "Family Recipes")
       {
         this.isFamily=true;

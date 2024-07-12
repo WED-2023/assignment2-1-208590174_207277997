@@ -200,7 +200,7 @@ import {
   sameAs,
   email
 } from "vuelidate/lib/validators";
-import { mockRegister } from "../services/auth.js";
+import { Register } from "../services/auth.js";
 export default {
   name: "Register",
   data() {
@@ -241,12 +241,12 @@ export default {
         required,
         minLength: minLength(5),
         maxLength: maxLength(10),
-        strongPassword(value) {
-          return helpers.withParams(
-            { type: "strongPassword" },
-            value => passwordRegex.test(value)
-          )
-        }
+        // strongPassword(value) {
+        //   return helpers.withParams(
+        //     { type: "strongPassword" },
+        //     value => passwordRegex.test(value)
+        //   )
+        // }
       },
       confirmedPassword: {
         required,
@@ -268,29 +268,31 @@ export default {
       const { $dirty, $error } = this.$v.form[param];
       return $dirty ? !$error : null;
     },
-    async Register() {
+    async Register() 
+    {
       try {
-
-        // const response = await this.axios.post(
-        //   // "https://test-for-3-2.herokuapp.com/user/Register",
-        //   this.$root.store.server_domain + "/Register",
-
-        //   {
-        //     username: this.form.username,
-        //     password: this.form.password
-        //   }
-        // );
-
-        const userDetails = {
+        const response = await this.axios.post(
+        this.$root.store.server_domain + "/Register",
+        // "http://127.0.0.1:3000/register",
+          {
           username: this.form.username,
-          password: this.form.password
-        };
-
-        const response = mockRegister(userDetails);
-
-        this.$router.push("/login");
-        // console.log(response);
-      } catch (err) {
+          firstName:this.form.firstName,
+          lastName:this.form.firstName,
+          country:this.form.country,
+          password: this.form.password,
+          email:this.form.email
+          }
+        );
+        if (!response) 
+        {
+          throw { status: 409, response: { data: { message: "Username taken", success: false } } };
+        }
+        else
+        this.$router.push("/login");  
+        console.log(response);
+      } 
+      catch (err) 
+      {
         console.log(err.response);
         this.form.submitError = err.response.data.message;
       }

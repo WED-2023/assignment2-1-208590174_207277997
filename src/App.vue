@@ -72,7 +72,7 @@
 <script>
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import NewRecipeModal from './components/NewRecipeModal.vue';
-
+import axios from "axios";
 export default {
   name: "App",
   data() {
@@ -81,16 +81,23 @@ export default {
     };
   },
   methods: {
+    async logout() {
+      try {
+        const response = await this.axios.post(this.$root.store.server_domain +"/Logout");
+        if (response) {
+          this.$root.store.logout();
+          this.$router.push("/").catch(() => {
+          this.$forceUpdate();
+      });
+        }
+      } catch (error) {
+        console.error('Error logging out:', error);
+      }
+    },
     goToSearch() {
       if (this.searchQuery.trim() !== '') {
         this.$router.push({ name: 'search', query: { q: this.searchQuery } });
       }
-    },
-    logout() {
-      this.$root.store.logout();
-      this.$router.push("/").catch(() => {
-        this.$forceUpdate();
-      });
     },
     openModal() {
       this.$refs.NewRecipeModal.openModal();

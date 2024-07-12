@@ -74,7 +74,22 @@ export default {
     }
   },
   methods: {
-    showHoverEffect() {
+    async like(recipeId) {
+      try {
+        this.axios.defaults.withCredentials = true;
+        const response = await this.axios.post(
+        this.$root.store.server_domain +"/users/favorites",
+        {
+          // recipeId: parseInt(recipeId, 10),
+          recipeId:716429
+        }
+        );
+        return response;
+      } catch (err) {
+        console.log(err.response);
+      }
+    }
+    ,showHoverEffect() {
       this.hovered = true;
     },
     hideHoverEffect() {
@@ -90,9 +105,10 @@ export default {
       localStorage.setItem(`favorite_${this.recipe.id}`, this.isFavorite.toString());
       
       if (this.isFavorite==true) {
-        const response = mockAddFavorite(this.$route.params.recipeId);
-         if (response.status === 200 && response.data.success) {
-          this.$bvToast.toast(response.data.message, {
+        const response = this.like(this.$route.params.recipeId);
+        
+        if (response) {
+          this.$bvToast.toast("Successfully added to favorites", {
             title: 'Notification',
             autoHideDelay: 5000,
             toaster: 'b-toaster-bottom-right',
