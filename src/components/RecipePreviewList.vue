@@ -4,20 +4,16 @@
       {{page_title}}
       <slot></slot>
     </h3>
-    <b-col v-for="(r,index) in recipes" :key="r.id">
+    <b-col v-for="r in recipes" :key="r.id">
       <br>
-      <h5 v-show="isFamily">{{ description[index] }}</h5>
       <RecipePreview class="recipePreview" :recipe="r" />
     </b-col>
+    
   </b-container>
 </template>
 
 <script>
 import RecipePreview from "./RecipePreview.vue";
-import { mockGetRecipesPreview } from "../services/recipes.js";
-import { mockGetUserRecipesPreview } from '../services/user.js';
-import { mockGetFavoriteRecipesPreview} from "../services/user.js";
-import { mockGetFamilyRecipesPreview} from "../services/user.js";
 export default {
   name: "RecipePreviewList",
   components: {
@@ -39,57 +35,36 @@ export default {
     };
   },
   methods: {
-    async updateRecipes(amount = 3) {
+    async updateRecipes() {
+    // responsible for random recipes only
       try
       {
-      if (this.title === "Users Own Recipes")
-      {
-        //recipes that the user has created
-        const response = await mockGetUserRecipesPreview(amount,this.username);
-        this.recipes = response.data.recipes;
-        this.page_title="Recipes I have contributed:"
-        
-      }
-
-      else if (this.title === "Last viewed recipes" || this.title==="Explore these recipes")
-      {
-        const response = await mockGetRecipesPreview(amount);
-        this.recipes = response.data.recipes;
-        this.page_title="Explore these recipes:"
-        if (this.title==="Last viewed recipes")
-          {this.page_title="Top Recipes:"}
-      }
-      else if (this.title ==="Users Favorite Recipes")
-      {
-        // const response = await mockGetFavoriteRecipesPreview(amount,this.username);   
-          try 
-          {
-          this.axios.defaults.withCredentials = true;
-          const response = await this.axios.get(
-          this.$root.store.server_domain +"/users/favorites");
-        } 
-        catch (err) {
-          console.log(err.response);
-        }
-        // this.recipes = response.data.recipes;
-        this.recipes = response;
-        this.page_title="Recipes I Loved:"
-        }
-        
       
-      
-      else if(this.title=== "Family Recipes")
-      {
-        this.isFamily=true;
-        const response = await mockGetFamilyRecipesPreview(amount,this.username);
-        this.recipes = response.data.recipes;
-        this.page_title="My family's recipes:"
+            if (this.title === "Last viewed recipes" || this.title==="Explore these recipes")
+              {
+              const response = await this.axios.get(
+              this.$root.store.server_domain + "/recipes/random",
+              {
+                withCredentials: true
+              }
+            );
+            this.recipes = response.data;
+            }
+            else if (this.title === "Users Favorite Recipes")
+              {
+              const response = await this.axios.get(
+              this.$root.store.server_domain + "/users/favorites",
+              {
+                withCredentials: true
+              }
+            );
+            this.recipes = response.data;
+            }
       }
-    }
-       catch (error) {
+      catch (error) {
         console.error("Error fetching recipes:", error);
       }
-          
+        
     }
   },
   mounted() {

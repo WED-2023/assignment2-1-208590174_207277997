@@ -18,6 +18,7 @@
       <div :title="recipe.title" class="recipe-title">
         {{ recipe.title }}
       </div>
+
       <ul class="recipe-overview">
         <li v-if="recipe.vegan">
           <img
@@ -46,7 +47,12 @@
         <li>{{ recipe.aggregateLikes }} likes</li>
       </ul>
       <div class="recipe-actions">
-        <button @click.stop="toggleFavorite" class="favorite-button">
+        <button
+          :disabled="isButtonDisabled()"
+          @click.stop="toggleFavorite"
+          :class="{ 'enabled-button': isButtonEnabled, 'disabled-button': !isButtonEnabled }"
+          class="favorite-button"
+        >
           Add to favorites
           <i v-if="isFavorite" class="fas fa-heart heart-icon-filled"></i>
           <i v-else class="far fa-heart heart-icon-unfilled"></i>
@@ -66,28 +72,39 @@ export default {
     return {
       hovered: false,
       isFavorite: localStorage.getItem(`favorite_${this.recipe.id}`) === 'true',
+      isButtonEnabled: false 
     };
   },
   computed: {
     viewed() {
       return localStorage.getItem(`viewed_${this.recipe.id}`) === 'true';
-    }
+    },
   },
   methods: {
     async like(recipeId) {
+      
+      // The value is already a number
       try {
         this.axios.defaults.withCredentials = true;
         const response = await this.axios.post(
         this.$root.store.server_domain +"/users/favorites",
         {
-          // recipeId: parseInt(recipeId, 10),
-          recipeId:716429
+          recipeId:  Math.floor(recipeId),
+          // recipeId:841432
         }
         );
+        this.isButtonEnabled = true;
         return response;
       } catch (err) {
         console.log(err.response);
       }
+    }
+    ,isButtonDisabled(){
+      if (this.isButtonEnabled===true || this.$route.name === 'favorite-recipes')
+      {
+       return true; 
+      }
+      return false;
     }
     ,showHoverEffect() {
       this.hovered = true;
@@ -105,7 +122,9 @@ export default {
       localStorage.setItem(`favorite_${this.recipe.id}`, this.isFavorite.toString());
       
       if (this.isFavorite==true) {
-        const response = this.like(this.$route.params.recipeId);
+
+        // const response = this.like(this.$route.params.recipeId);
+        const response = this.like(this.recipe.id);
         
         if (response) {
           this.$bvToast.toast("Successfully added to favorites", {
@@ -116,24 +135,25 @@ export default {
             variant: 'success'
           });
         } 
-        else {
-          this.$bvToast.toast('Failed to add the recipe to favorites.', {
-            title: 'Notification',
-            autoHideDelay: 5000,
-            toaster: 'b-toaster-bottom-right',
-            appendToast: true,
-            variant: 'danger'
-          });
-        }
-      } else {
-        this.$bvToast.toast('Recipe was removed from favorites', {
-          title: 'Notification',
-          autoHideDelay: 5000,
-          toaster: 'b-toaster-bottom-right',
-          appendToast: true,
-          variant: 'danger'
-        });
-      }
+        // else {
+        //   this.$bvToast.toast('Failed to add the recipe to favorites.', {
+        //     title: 'Notification',
+        //     autoHideDelay: 5000,
+        //     toaster: 'b-toaster-bottom-right',
+        //     appendToast: true,
+        //     variant: 'danger'
+        //   });
+        // }
+      } 
+      // else {
+      //   this.$bvToast.toast('Recipe was removed from favorites', {
+      //     title: 'Notification',
+      //     autoHideDelay: 5000,
+      //     toaster: 'b-toaster-bottom-right',
+      //     appendToast: true,
+      //     variant: 'danger'
+      //   });
+      // }
     }
   },
   props: {
@@ -227,6 +247,18 @@ export default {
   border-radius: 10px; /* Adjust border-radius for rounded corners */
   cursor: pointer;
   font-size: 1em; /* Adjust font size for larger button */
+}
+.favorite-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.enabled-button {
+  background-color: #28a745; /* צבע ירוק כאשר הכפתור מופעל */
+}
+
+.disabled-button {
+  background-color: #007bff; /* הצבע הרגיל של הכפתור כאשר הוא לא מופעל */
 }
 
 .recipe-actions button {

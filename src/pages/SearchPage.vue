@@ -121,17 +121,34 @@ export default {
       if (this.query.trim() === "") return;
       this.updateRecentSearches(this.query);
       try {
-        const response = await mockSearchRecipes(
-          this.query,
-          this.amount,
-          this.selectedCuisines,
-          this.selectedDiets,
-          this.selectedIntolerances
+        
+        const response = await this.axios.get(
+        this.$root.store.server_domain + "/recipes/search",
+        {
+          params: {
+          recipeName: this.query,
+          cuisine: this.selectedCuisines,
+          diet: this.selectedDiets,
+          intolerance: this.selectedIntolerances,
+          number: this.amount,
+            }
+          }
         );
-        const recipes = response.data.recipes;
-        this.recipes = [];
-        this.recipes.push(...recipes);
-      } catch (error) {
+        this.recipes = response.data;
+        
+        // const response = await mockSearchRecipes(
+        //   this.query,
+        //   this.amount,
+        //   this.selectedCuisines,
+        //   this.selectedDiets,
+        //   this.selectedIntolerances
+        // );
+        // const recipes = response.data.recipes;
+        // this.recipes = [];
+        // this.recipes.push(...recipes);
+      } 
+      catch (error) 
+      {
         console.log(error);
       }
     },

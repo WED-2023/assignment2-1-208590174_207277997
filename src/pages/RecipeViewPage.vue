@@ -3,7 +3,7 @@
     <div v-if="recipe">
       <div class="recipe-header mt-3 mb-4">
         <h1>{{ recipe.title }}</h1>
-        <!-- <img :src="recipe.image" class="center" /> -->
+        <img :src="recipe.image" class="center" />
         <b-col>
         <RecipePreview class="recipe-preview" :recipe="preview_response" />
       </b-col>
@@ -35,11 +35,11 @@
           </div>
         </div>
       </div>
-      <!-- <pre>
+      <pre>
       {{ $route.params }}
       {{ recipe }}
     </pre
-      > -->
+      >
     </div>
   </div>
 </template>
@@ -68,17 +68,17 @@ export default {
       // response = this.$route.params.response;
 
       try {
-        // response = await this.axios.get(
-        //   this.$root.store.server_domain + "/recipes/" + this.$route.params.recipeId,
-        //   {
-        //     withCredentials: true
-        //   }
-        // );
-        response = mockGetRecipeFullDetails(this.$route.params.recipeId);
-        this.preview_response = await mockGetSpecificRecipePreview(this.$route.params.recipeId);
+        response = await this.axios.get(
+          this.$root.store.server_domain + "/recipes/fullview/" + this.$route.params.recipeId,
+          {
+            withCredentials: true
+          }
+        );
+        //response = mockGetRecipeFullDetails(this.$route.params.recipeId);
+        //this.preview_response = await mockGetSpecificRecipePreview(this.$route.params.recipeId);
         
-        // console.log("response.status", response.status);
-        // if (response.status !== 200) this.$router.replace("/NotFound");
+        console.log("response.status", response.status);
+        if (response.status !== 200) this.$router.replace("/NotFound");
       } catch (error) {
         console.log("error.response.status", error.response.status);
         this.$router.replace("/NotFound");

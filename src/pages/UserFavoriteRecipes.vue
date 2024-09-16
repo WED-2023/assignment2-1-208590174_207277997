@@ -6,16 +6,7 @@
         <RecipePreviewList title="Users Favorite Recipes" class="UserFavoriteRecipes center" />
         <router-link v-if="!$root.store.username" to="/login" tag="button">You need to Login to view this</router-link>
         {{ !$root.store.username }}
-        <!-- <RecipePreviewList
-          title="Users Favorite Recipes"
-          :username="$root.store.username"
-          :class="{
-            UserRecipes: true,
-            blur: !$root.store.username,
-            center: true
-          }"
-          
-        ></RecipePreviewList> -->
+        
       </div>
       <!-- <div
         style="position: absolute;top: 70%;left: 50%;transform: translate(-50%, -50%);"

@@ -87,7 +87,8 @@
          glutenFree: false,
          summary: '',
          instructions: '',
-         extendedIngredients: []
+         extendedIngredients: [],
+         mappedIngredients:[]
        }
      };
    },
@@ -106,51 +107,13 @@
      },
      transformIngredients(ingredients) {
        return ingredients.map(ingredient => ({
-         id: Math.floor(Math.random() * 100000), // Generating a random ID for demonstration
-         aisle: "", // You can set this according to your data
-         image: "", // You can set this according to your data
-         consistency: "SOLID", // Assuming solid, you can adjust as needed
          name: ingredient.name,
-         nameClean: ingredient.name,
-         original: `${ingredient.amount} ${ingredient.unit} ${ingredient.name}`,
-         originalName: ingredient.name,
          amount: ingredient.amount,
          unit: ingredient.unit,
-         meta: [],
-         measures: {
-           us: {
-             amount: ingredient.amount,
-             unitShort: ingredient.unit,
-             unitLong: ingredient.unit
-           },
-           metric: {
-             amount: ingredient.amount,
-             unitShort: ingredient.unit,
-             unitLong: ingredient.unit
-           }
-         }
        }));
      },
-     createRecipe() {
-       const transformedIngredients = this.transformIngredients(this.newRecipe.extendedIngredients);
-       const recipeDetails = {
-         id: Math.floor(Math.random() * 1000000), // Generating a random ID for demonstration
-         image: this.newRecipe.image,
-         title: this.newRecipe.title,
-         readyInMinutes: this.newRecipe.readyInMinutes,
-         aggregateLikes: this.newRecipe.aggregateLikes,
-         vegetarian: this.newRecipe.vegetarian,
-         vegan: this.newRecipe.vegan,
-         glutenFree: this.newRecipe.glutenFree,
-         summary: this.newRecipe.summary,
-         analyzedInstructions: [],
-         instructions: this.newRecipe.instructions,
-         extendedIngredients: transformedIngredients,
-         servings: 2 // Assuming 2 servings for demonstration
-       };
- 
-      
-       if (!this.newRecipe.title || !this.newRecipe.image || this.newRecipe.readyInMinutes==0 || !this.newRecipe.summary || !this.newRecipe.instructions || this.newRecipe.extendedIngredients == 0) {
+     createRecipe() {            
+       if (!this.newRecipe.title || !this.newRecipe.image || this.newRecipe.readyInMinutes==0 || !this.newRecipe.summary || !this.newRecipe.instructions || this.newRecipe.extendedIngredients.length === 0) {
          alert('Please fill in all required fields.');
          return;
  
@@ -162,21 +125,47 @@
          }
        }
        
- 
-       const blob = new Blob([JSON.stringify(recipeDetails, null, 2)], { type: "application/json" });
-       // FileSaver.saveAs(blob, "new_recipes.json");
-       const response = mockAddUserRecipe(recipeDetails);
-       this.modalOpen = false;
-       this.$bvToast.toast("New Recipe was successfully added", {
-             title: 'Notification',
-             autoHideDelay: 5000,
-             toaster: 'b-toaster-bottom-right',
-             appendToast: true,
-             variant: 'success'
-           });
-       console.log("Recipe Created:", recipeDetails);
-     }
-     
+       this.create()
+
+     },
+     async create() {
+      this.mappedIngredients = this.transformIngredients(this.newRecipe.extendedIngredients);
+      try {
+        
+        const response = await this.axios.post(
+        this.$root.store.server_domain +"/users/createRecipes",
+        {
+         title: this.newRecipe.title,
+         readyInMinutes: this.newRecipe.readyInMinutes,
+         image: this.newRecipe.image,
+         summary: this.newRecipe.summary,
+         instructions: this.newRecipe.instructions,
+         popularity: this.newRecipe.aggregateLikes,
+         vegan: this.newRecipe.vegan,
+         vegetarian: this.newRecipe.vegetarian,
+         glutenFree: this.newRecipe.glutenFree,
+         ingredients:this.mappedIngredients
+          }
+        );
+        if (response)
+        {
+          //  const blob = new Blob([JSON.stringify(recipeDetails, null, 2)], { type: "application/json" });
+          // FileSaver.saveAs(blob, "new_recipes.json");
+           this.$bvToast.toast("New Recipe was successfully added", {
+                 title: 'Notification',
+                 autoHideDelay: 5000,
+                 toaster: 'b-toaster-bottom-right',
+                 appendToast: true,
+                 variant: 'success'
+               });
+         
+          this.modalOpen = false;
+        }
+      } catch (err) {
+        console.log(err.response);
+        this.form.submitError = err.response.data.message;
+      }
+    }
    }
  };
  
