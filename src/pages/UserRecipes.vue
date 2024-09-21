@@ -1,38 +1,59 @@
 <template>
-    <div class="container">
-      <div class="background-image"></div>
-      <div class="content">
-        <h1 class="title">My Recipes</h1>
-        <RecipePreviewList title="Users Own Recipes" class="UserRecipes center" />
-        <router-link v-if="!$root.store.username" to="/login" tag="button">You need to Login to view this</router-link>
-        {{ !$root.store.username }}
-        <!-- <RecipePreviewList
-          title="Users Own Recipes"
-          :class="{
-            UserRecipes: true,
-            blur: !$root.store.username,
-            center: true
-          }"
-          :username="$root.store.username"
-        ></RecipePreviewList> -->
-      </div>
-      <!-- <div
-        style="position: absolute;top: 70%;left: 50%;transform: translate(-50%, -50%);"
-      >
-        Centeredasdasdad
-      </div>-->
+  <div class="container">
+    <div class="background-image"></div>
+    <div class="content">
+      <h1 class="title">My Recipes</h1>
+      <router-link v-if="!$root.store.username" to="/login" tag="button">You need to Login to view this</router-link>
+      <RecipePreviewList 
+        title="Users Own Recipes" 
+        :recipes="recipes" 
+        class="UserRecipes center" 
+      />
     </div>
-  </template>
-  
-  <script>
-  import RecipePreviewList from "../components/RecipePreviewList";
-  export default {
-    name: "my-recipes",
-    components: {
-      RecipePreviewList
+    <!-- <div
+      style="position: absolute;top: 70%;left: 50%;transform: translate(-50%, -50%);"
+    >
+      Centeredasdasdad
+    </div>-->
+  </div>
+</template>
+
+<script>
+import RecipePreviewList from "../components/RecipePreviewList";
+export default {
+  name: "my-recipes",
+  components: {
+    RecipePreviewList
+  },
+  data() {
+    return {
+      recipes: [] 
+    };
+  },
+  mounted() {
+    this.getUserRecipes();
+  },
+  methods: {
+    async getUserRecipes() {
+      try {
+        if (this.$root.store.username) {
+          const response = await this.axios.get(
+            this.$root.store.server_domain + "/users/myRecipes",
+            {
+              withCredentials: true,
+            }
+          );
+          console.log("Response data:", response.data); 
+          this.recipes = response.data;
+        }
+      } catch (error) {
+        console.error("Error fetching user recipes:", error);
+      }
     }
-  };
-  </script>
+  },
+};
+
+</script>
   
   <style lang="scss" scoped>
   .container {

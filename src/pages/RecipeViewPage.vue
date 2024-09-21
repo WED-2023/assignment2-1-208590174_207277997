@@ -1,148 +1,164 @@
 <template>
-  <div class="container">
-    <div v-if="recipe">
-      <div class="recipe-header mt-3 mb-4">
-        <h1>{{ recipe.title }}</h1>
-        <img :src="recipe.image" class="center" />
-        <b-col>
-        <RecipePreview class="recipe-preview" :recipe="preview_response" />
-      </b-col>
+  <div class="container d-flex justify-content-center">
+    <div class="card recipe-card" v-if="recipe">
+      <div class="card-header text-center recipe-header">
+        <h1 class="card-title">{{ recipe.title }}</h1>
+        <img :src="recipe.image" class="card-img-top" />
       </div>
-      <div class="recipe-body">
+      <div class="card-body recipe-body">
         <div class="wrapper">
           <div class="wrapped">
             <div class="mb-3">
-              <div>Ready in {{ recipe.readyInMinutes }} minutes</div>
-              <div>Likes: {{ recipe.aggregateLikes }} likes</div>
+              <div><b>Ready in {{ recipe.readyInMinutes }} minutes ⏱️</b></div>
+              <div><b>Likes: {{ recipe.aggregateLikes }} likes ❤️</b></div>
+              <div><b>Servings: {{ recipe.servings }} 🍽️</b></div> 
+              <p v-if="recipe.vegan" class="badge badge-success mt-2">Vegan 🌿</p>
+              <p v-if="recipe.vegetarian" class="badge badge-warning mt-2">Vegetarian 🥦</p>
+              <p v-if="recipe.glutenFree" class="badge badge-info mt-2">Gluten-Free 🚫🌾</p>
             </div>
-            Ingredients:
+            <b>Ingredients ({{ recipe.servings }} servings):</b>
             <ul>
-              <li
-                v-for="(r, index) in recipe.extendedIngredients"
-                :key="index + '_' + r.id"
-              >
-                {{ r.original }}
+              <li v-for="(ingredient, index) in recipe.extendedIngredients" :key="index">
+                {{ ingredient.original }}
               </li>
             </ul>
           </div>
           <div class="wrapped">
-            Instructions:
+            <b>Instructions:</b>
             <ol>
-              <li v-for="s in recipe._instructions" :key="s.number">
-                {{ s.step }}
+              <li v-for="(step, index) in recipe.instructions" :key="index">
+                {{ step }}
               </li>
             </ol>
           </div>
         </div>
+        <div class="button-container mt-4 d-flex justify-content-center">
+          <b-button variant="primary" :to="{ name: 'main' }">Back to Home Page</b-button>
+        </div>
       </div>
-      <pre>
-      {{ $route.params }}
-      {{ recipe }}
-    </pre
-      >
     </div>
   </div>
 </template>
 
+
 <script>
-import RecipePreview from "../components/RecipePreview.vue";
-import { mockGetRecipeFullDetails } from "../services/recipes.js";
-import { mockGetSpecificRecipePreview } from "../services/recipes.js";
 export default {
   
-  components: {
-    RecipePreview,
-      },
-
   data() {
     return {
       recipe: null,
-      
-      preview_response:null
     };
   },
   async created() {
     try {
-      let response;
-    
-      // response = this.$route.params.response;
+      const recipeId = this.$route.params.recipeId;
+      console.log("Recipe ID from route params:", recipeId); 
+      const response = await this.axios.get(
+        this.$root.store.server_domain +
+          "/recipes/fullview/" +
+          this.$route.params.recipeId,
+        {
+          withCredentials: true
+        }
+      );
+      console.log("Recipe data from server:", response.data);
 
-      try {
-        response = await this.axios.get(
-          this.$root.store.server_domain + "/recipes/fullview/" + this.$route.params.recipeId,
-          {
-            withCredentials: true
-          }
-        );
-        //response = mockGetRecipeFullDetails(this.$route.params.recipeId);
-        //this.preview_response = await mockGetSpecificRecipePreview(this.$route.params.recipeId);
-        
-        console.log("response.status", response.status);
-        if (response.status !== 200) this.$router.replace("/NotFound");
-      } catch (error) {
-        console.log("error.response.status", error.response.status);
+      if (response.status !== 200) {
         this.$router.replace("/NotFound");
         return;
       }
 
-      let {
-        analyzedInstructions,
-        instructions,
-        extendedIngredients,
-        aggregateLikes,
-        readyInMinutes,
-        image,
-        title
-      } = response.data.recipe;
+      //instructions recipe
+      if (response && response.data) {
+        let instructions = [];
+        if (response.data.analyzedInstructions && response.data.analyzedInstructions.length > 0) {
+          instructions = response.data.analyzedInstructions
+            .map(instruction => instruction.steps.map(step => step.step))
+            .flat();
+        } else if (typeof response.data.instructions === 'string') {
+          instructions = response.data.instructions.split('. ').filter(Boolean);
+        }
 
-      let _instructions = analyzedInstructions
-        .map((fstep) => {
-          fstep.steps[0].step = fstep.name + fstep.steps[0].step;
-          return fstep.steps;
-        })
-        .reduce((a, b) => [...a, ...b], []);
-
-      let _recipe = {
-        instructions,
-        _instructions,
-        analyzedInstructions,
-        extendedIngredients,
-        aggregateLikes,
-        readyInMinutes,
-        image,
-        title
-      };
-
-      this.recipe = _recipe;
+        this.recipe = {
+          ...response.data,
+          instructions,
+        };
+      } else {
+        this.$router.replace("/NotFound");
+      }
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching recipe:", error);
+      this.$router.replace("/NotFound");
     }
   }
 };
 </script>
 
 <style scoped>
+.recipe-card {
+  margin-top: 50px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+  overflow: hidden;
+  width: 70%;
+}
+
+.recipe-header {
+  background-color: #f8f9fa;
+  padding: 20px;
+}
+
+.card-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.card-img-top {
+  width: 60%;
+  height: auto;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+
+.recipe-body {
+  padding: 20px;
+}
+
 .wrapper {
   display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
 }
-.wrapped {
-  width: 50%;
-}
-.center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 300px;
-}
-.recipe-preview
-{
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 700px;
-  min-height: auto;
-}
-/* .recipe-header{
 
-} */
+.wrapped {
+  width: 45%;
+}
+
+ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+li {
+  padding-bottom: 5px;
+}
+
+.button-container {
+  margin-top: 20px;
+}
+
+.badge {
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    flex-direction: column;
+  }
+  .wrapped {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+}
 </style>

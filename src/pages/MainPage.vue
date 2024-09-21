@@ -45,7 +45,7 @@ import { BButton } from 'bootstrap-vue';
 export default {
   components: {
     RecipePreviewList,
-    LoginPage,
+    //LoginPage,
     BButton
   },
   data() {

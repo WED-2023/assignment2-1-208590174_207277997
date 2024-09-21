@@ -5,7 +5,6 @@
         <h1 class="title">My Favorite Recipes</h1>
         <RecipePreviewList title="Users Favorite Recipes" class="UserFavoriteRecipes center" />
         <router-link v-if="!$root.store.username" to="/login" tag="button">You need to Login to view this</router-link>
-        {{ !$root.store.username }}
         
       </div>
       <!-- <div
