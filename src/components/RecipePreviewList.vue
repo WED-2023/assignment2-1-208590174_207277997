@@ -1,14 +1,10 @@
 <template>
   <b-container>
-    <h3>
-      {{page_title}}
-      <slot></slot>
-    </h3>
-    <b-col v-for="r in recipes" :key="r.id">
+    <h3>{{title}}</h3>
+    <b-col v-for="r in recipes" :key="r.recipe_id">
       <br>
-      <RecipePreview class="recipePreview" :recipe="r" />
+      <RecipePreview class="recipePreview" :recipe="r" @click.native="viewRecipe(r.recipe_id)" />
     </b-col>
-    
   </b-container>
 </template>
 
@@ -24,24 +20,28 @@ export default {
       type: String,
       required: true
     },
-    username:String
+    username: {
+      type: String,
+      required: false // נ
+    },
+    recipes: {
+      type: Array,
+      required: true
+    }
   },
   data() {
     return {
       page_title:" ",
-      description:["My grandpa's favorite dish for Shavu'ot Holiday","My mom's most famous dish for Saturday Breakfast", "My Dad's Artichok for Monday Evening"],
-      recipes: [],
-      isFamily: false
+      localRecipes: this.recipes 
     };
   },
+  
   methods: {
     async updateRecipes() {
     // responsible for random recipes only
       try
       {
-      
-            if (this.title === "Last viewed recipes" || this.title==="Explore these recipes")
-              {
+            if (this.title==="Explore these recipes"){
               const response = await this.axios.get(
               this.$root.store.server_domain + "/recipes/random",
               {
@@ -50,8 +50,17 @@ export default {
             );
             this.recipes = response.data;
             }
-            else if (this.title === "Users Favorite Recipes")
+            else if (this.title === "Last viewed recipes")
+            {
+              const response = await this.axios.get(
+              this.$root.store.server_domain + "/users/lastViewed",
               {
+                withCredentials: true
+              }
+            );
+            this.recipes = response.data;
+            }
+            else if (this.title === "Users Favorite Recipes"){
               const response = await this.axios.get(
               this.$root.store.server_domain + "/users/favorites",
               {
@@ -63,15 +72,23 @@ export default {
       }
       catch (error) {
         console.error("Error fetching recipes:", error);
+      }        
+    },
+    viewRecipe(recipeId) {
+      if (!recipeId) {
+        console.error("Recipe ID is missing");
+        return;
       }
-        
+      this.$router.push({
+        name: "recipe", 
+        params: { recipeId }
+      });
     }
+
   },
   mounted() {
-    this.updateRecipes(); // Initial update when component mounts
-  },
-  
-
+      this.updateRecipes(); 
+  }
 };
 </script>
 

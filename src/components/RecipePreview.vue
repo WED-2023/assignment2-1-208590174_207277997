@@ -1,19 +1,14 @@
 <template>
   <div class="recipe-preview">
-    <router-link
-      :to="{ name: 'recipe', params: { recipeId: recipe.id } }"
-      class="recipe-link"
-    >
-      <div class="recipe-body" @click="markAsViewed">
-        <img
-          :src="recipe.image"
-          class="recipe-image"
-          @mouseover="showHoverEffect"
-          @mouseout="hideHoverEffect"
-        />
-        <div v-if="hovered" class="image-hover">Click to view recipe</div>
-      </div>
-    </router-link>
+    <div @click="navigateToViewPage(recipe.id)">
+      <img
+        :src="recipe.image"
+        class="recipe-image"
+        @mouseover="showHoverEffect"
+        @mouseout="hideHoverEffect"
+      />
+      <div v-if="hovered" class="image-hover">Click to view recipe</div>
+    </div>
     <div class="recipe-footer">
       <div :title="recipe.title" class="recipe-title">
         {{ recipe.title }}
@@ -49,7 +44,7 @@
       <div class="recipe-actions">
         <button
           :disabled="isButtonDisabled()"
-          @click.stop="toggleFavorite"
+          @click.stop="toggleFavorite($event, recipe.recipe_id)"
           :class="{ 'enabled-button': isButtonEnabled, 'disabled-button': !isButtonEnabled }"
           class="favorite-button"
         >
@@ -64,16 +59,23 @@
 </template>
 
 <script>
-import { mockAddFavorite } from "../services/user.js";
-
 export default {
   name: "RecipePreview",
   data() {
     return {
       hovered: false,
       isFavorite: localStorage.getItem(`favorite_${this.recipe.id}`) === 'true',
-      isButtonEnabled: false 
+      isButtonEnabled: false
     };
+  },
+  props: {
+    recipe: {
+      type: Object,
+      required: true
+      // validator(value) {
+      //   return value && value.id && value.title && value.image;
+      // }
+    }
   },
   computed: {
     viewed() {
@@ -81,6 +83,12 @@ export default {
     },
   },
   methods: {
+    navigateToViewPage(recipeid)
+    {
+      if(recipeid){
+        this.$router.push({name: 'recipe', params: { recipeId: recipeid }})
+      }
+    },
     async like(recipeId) {
       
       // The value is already a number
@@ -89,8 +97,7 @@ export default {
         const response = await this.axios.post(
         this.$root.store.server_domain +"/users/favorites",
         {
-          recipeId:  Math.floor(recipeId),
-          // recipeId:841432
+          recipeId:  recipeId,
         }
         );
         this.isButtonEnabled = true;
@@ -116,7 +123,7 @@ export default {
       this.viewed = true;
       localStorage.setItem(`viewed_${this.recipe.id}`, 'true');
     },
-    toggleFavorite(event) {
+    toggleFavorite(event,recipeId) {
       event.stopPropagation();
       this.isFavorite = !this.isFavorite;
       localStorage.setItem(`favorite_${this.recipe.id}`, this.isFavorite.toString());
@@ -124,7 +131,8 @@ export default {
       if (this.isFavorite==true) {
 
         // const response = this.like(this.$route.params.recipeId);
-        const response = this.like(this.recipe.id);
+        const response = this.like(recipeId);
+        // const response = this.like(this.$route.params.recipeId);
         
         if (response) {
           this.$bvToast.toast("Successfully added to favorites", {
@@ -135,33 +143,10 @@ export default {
             variant: 'success'
           });
         } 
-        // else {
-        //   this.$bvToast.toast('Failed to add the recipe to favorites.', {
-        //     title: 'Notification',
-        //     autoHideDelay: 5000,
-        //     toaster: 'b-toaster-bottom-right',
-        //     appendToast: true,
-        //     variant: 'danger'
-        //   });
-        // }
       } 
-      // else {
-      //   this.$bvToast.toast('Recipe was removed from favorites', {
-      //     title: 'Notification',
-      //     autoHideDelay: 5000,
-      //     toaster: 'b-toaster-bottom-right',
-      //     appendToast: true,
-      //     variant: 'danger'
-      //   });
-      // }
     }
   },
-  props: {
-    recipe: {
-      type: Object,
-      required: true
-    }
-  }
+  
 };
 </script>
 
