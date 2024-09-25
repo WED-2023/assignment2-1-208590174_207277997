@@ -55,10 +55,15 @@ export default {
   },
   async created() {
     try {
+      // Safely handle the possibility of missing or undefined 'instructions'
+      const instructions = family_recipe.instructions
+        ? family_recipe.instructions.split(", ")
+        : []; // Fallback to an empty array if instructions are not available
+
       // Modify the recipe structure to fit the template
       this.recipe = {
         ...family_recipe,
-        instructionsArray: family_recipe.instructions.split(", "), // Convert instructions string into an array
+        instructionsArray: instructions, // Use the safely split instructions array
         vegan: family_recipe.vegan === 1, // Convert to boolean
         vegetarian: family_recipe.vegetarian === 1, // Convert to boolean
         glutenFree: family_recipe.glutenFree === 1, // Convert to boolean
@@ -70,6 +75,7 @@ export default {
   }
 };
 </script>
+
 
 <style scoped>
 .recipe-card {

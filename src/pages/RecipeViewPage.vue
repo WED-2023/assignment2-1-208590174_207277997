@@ -55,7 +55,7 @@ export default {
       console.log("Recipe ID from route params:", recipeId); 
       const response = await this.axios.get(
         this.$root.store.server_domain +
-          "/recipes/fullview/" +
+          "/users/fullview/" +
           this.$route.params.recipeId,
         {
           withCredentials: true

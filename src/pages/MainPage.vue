@@ -58,7 +58,7 @@ export default {
     if (this.$root.store.username) {
       this.fetchLastViewedRecipes();
     }
-    this.fetchRandomRecipes(); // Fetch initial random recipes
+    // this.fetchRandomRecipes(); // Fetch initial random recipes
   },
   methods: {
     async fetchRandomRecipes() {
